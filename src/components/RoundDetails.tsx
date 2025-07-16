@@ -105,7 +105,7 @@ const RoundDetails = () => {
                   {round.status === "upcoming" && (
                     <div className="mt-4">
                       <Button 
-                        className="w-full bg-green-500 hover:bg-green-600 text-white"
+                        className="w-full bg-green-900 hover:bg-green-600 text-white"
                         onClick={() => window.open(round.joinLink, '_blank')}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
