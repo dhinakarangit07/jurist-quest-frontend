@@ -1,9 +1,10 @@
+"use client"
 
-import { useState, useEffect } from "react";
-import { Clock } from "lucide-react";
+import { useState, useEffect } from "react"
+import { Clock } from "lucide-react"
 
 interface CountdownTimerProps {
-  targetDate: Date;
+  targetDate: Date
 }
 
 const CountdownTimer = ({ targetDate }: CountdownTimerProps) => {
@@ -11,29 +12,32 @@ const CountdownTimer = ({ targetDate }: CountdownTimerProps) => {
     days: 0,
     hours: 0,
     minutes: 0,
-    seconds: 0
-  });
+    seconds: 0,
+  })
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
+      const now = new Date().getTime()
+      const distance = targetDate.getTime() - now
 
       if (distance > 0) {
         setTimeLeft({
           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
           hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
           minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        });
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        })
+      } else {
+        clearInterval(timer)
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
       }
-    }, 1000);
+    }, 1000)
 
-    return () => clearInterval(timer);
-  }, [targetDate]);
+    return () => clearInterval(timer)
+  }, [targetDate])
 
   return (
-    <div className="flex items-center gap-3 bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-lg">
+    <div className="flex items-center gap-3 bg-gradient-to-r from-green-900 to-green-900 text-white px-4 py-2 rounded-lg">
       <Clock className="h-4 w-4 animate-pulse" />
       <div className="flex items-center gap-2 text-sm font-medium">
         <span>{timeLeft.days}d</span>
@@ -42,7 +46,7 @@ const CountdownTimer = ({ targetDate }: CountdownTimerProps) => {
         <span>{timeLeft.seconds}s</span>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CountdownTimer;
+export default CountdownTimer
