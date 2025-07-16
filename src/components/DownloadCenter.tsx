@@ -93,7 +93,7 @@ const DownloadCenter = () => {
                   <Button 
                     size="sm" 
                     onClick={() => handleDownload(item.name)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                    className="bg-green-900 hover:bg-green-700 text-white"
                   >
                     <Download className="h-4 w-4 mr-1" />
                     Download
