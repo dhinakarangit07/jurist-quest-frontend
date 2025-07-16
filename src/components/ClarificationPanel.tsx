@@ -61,7 +61,7 @@ const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Send className="h-5 w-5 text-blue-500" />
+              <Send className="h-5 w-5 text-green-800" />
               Submit Clarification
             </CardTitle>
             <CardDescription>
@@ -93,7 +93,7 @@ const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
                 />
               </div>
 
-              <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600">
+              <Button type="submit" className="w-full bg-green-900 hover:bg-green-700">
                 <Send className="h-4 w-4 mr-2" />
                 Submit Clarification
               </Button>
