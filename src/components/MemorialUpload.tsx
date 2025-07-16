@@ -104,7 +104,7 @@ const MemorialUpload = ({ teamCode }: MemorialUploadProps) => {
             <Button 
               onClick={handleUpload}
               disabled={!selectedFile}
-              className="w-full bg-green-500 hover:bg-green-600"
+              className="w-full bg-green-900 hover:bg-green-600"
             >
               <Upload className="h-4 w-4 mr-2" />
               Upload Memorial
