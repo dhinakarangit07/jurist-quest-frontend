@@ -4,6 +4,7 @@ import { useState } from "react"
 import LoginForm from "@/components/LoginForm"
 import Dashboard from "./dashboard"
 
+
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [teamData, setTeamData] = useState({
