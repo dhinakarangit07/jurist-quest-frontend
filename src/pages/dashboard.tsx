@@ -56,7 +56,6 @@ const DashboardContent = ({ teamData, onLogout }: DashboardProps) => {
 
   return (
     <div className="flex flex-col flex-1">
-      
       <main className="flex-1 overflow-auto p-6 space-y-6">
         <Card className="bg-blue-500 text-white p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-400 opacity-90"></div>
@@ -133,20 +132,23 @@ const DashboardContent = ({ teamData, onLogout }: DashboardProps) => {
               </div>
               <CardTitle className="text-lg font-semibold">Team Members</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 w-full flex -space-x-2 overflow-hidden">
+            <CardContent className="p-0 w-full flex flex-wrap gap-4 justify-center sm:justify-start">
               {teamData.participants.map((participant, index) => (
-                <Avatar key={index} className="h-8 w-8 border-2 border-white">
-                  <AvatarImage
-                    src={participant.avatarUrl || `/placeholder.svg?height=32&width=32`}
-                    alt={participant.name || "Participant"}
-                  />
-                  <AvatarFallback>
-                    {(participant.name || "")
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
+                <div key={index} className="flex flex-col items-center text-center">
+                  <Avatar className="h-12 w-12 border-2 border-white mb-1">
+                    <AvatarImage
+                      src={participant.avatarUrl || `/placeholder.svg?height=48&width=48`}
+                      alt={participant.name || "Participant"}
+                    />
+                    <AvatarFallback>
+                      {(participant.name || "")
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <p className="text-sm text-gray-700 font-medium">{participant.name}</p>
+                </div>
               ))}
             </CardContent>
           </Card>
