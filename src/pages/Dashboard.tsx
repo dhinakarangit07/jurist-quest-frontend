@@ -18,6 +18,7 @@ import {
   Phone,
   ExternalLink,
   AlertTriangle,
+  Menu,
 } from "lucide-react"
 import CountdownTimer from "@/components/CountdownTimer"
 import Overview from "./Overview";
@@ -28,6 +29,8 @@ import DownloadCenter from "@/components/DownloadCenter"
 import RoundDetails from "@/components/RoundDetails"
 
 import Sidebar from "@/components/sidebar";
+
+import ContactPage from "@/components/ContactPage"
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -64,19 +67,25 @@ const Dashboard = () => {
     <Tabs defaultValue="overview">
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-white flex">
         <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <main className="flex-1">
+        
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={toggleSidebar}
+          ></div>
+        )}
+
+        <main className="flex-1 lg:ml-64">
+          <div className="flex items-center justify-between p-4 border-b lg:hidden">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+              <Menu className="h-6 w-6" />
+            </Button>
+            <h1 className="text-lg font-semibold">Moot Court Central</h1>
+          </div>
 
           <div className="container mx-auto px-4 py-6">
-            {/* Urgent Alerts */}
-            <div className="mb-6">
-              <Alert className="border-yellow-200 bg-yellow-50">
-                <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                <AlertTitle className="text-yellow-800">Upcoming Deadline</AlertTitle>
-                <AlertDescription className="text-yellow-700">
-                  Memorial submission deadline is in 2 days (Dec 8, 11:59 PM)
-                </AlertDescription>
-              </Alert>
-            </div>
+            
+            
 
             <TabsContent value="overview">
               <Overview teamData={teamData} upcomingRounds={upcomingRounds} />
@@ -98,59 +107,12 @@ const Dashboard = () => {
               <AnnouncementFeed />
             </TabsContent>
 
-            <TabsContent value="support">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Phone className="h-5 w-5 text-blue-500" />
-                      Helpdesk Contacts
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                      <div>
-                        <p className="font-medium">Technical Support</p>
-                        <p className="text-sm text-gray-600">Platform & Upload Issues</p>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        <Phone className="h-4 w-4 mr-2" />
-                        Call
-                      </Button>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <div>
-                        <p className="font-medium">Competition Queries</p>
-                        <p className="text-sm text-gray-600">Rules & Procedures</p>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        <MessageCircle className="h-4 w-4 mr-2" />
-                        Chat
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+            <TabsContent value="round-details">
+              <RoundDetails />
+            </TabsContent>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <ExternalLink className="h-5 w-5 text-green-500" />
-                      WhatsApp Groups
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Button className="w-full bg-green-800 hover:bg-green-600 text-white">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      General Updates Group
-                    </Button>
-                    <Button className="w-full bg-green-800 hover:bg-green-600 text-white">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Technical Support Group
-                    </Button>
-                    <p className="text-xs text-gray-500 text-center">Click to join WhatsApp groups for instant updates</p>
-                  </CardContent>
-                </Card>
-              </div>
+            <TabsContent value="support">
+              <ContactPage />
             </TabsContent>
           </div>
         </main>
