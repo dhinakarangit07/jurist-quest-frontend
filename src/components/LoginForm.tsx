@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import LoadingScreen from "@/components/LoadingScreen"
+import Logo from "@/assets/Logo.png"
 
 interface LoginFormProps {
   onLogin: (teamData: any) => void
@@ -88,12 +89,8 @@ const Index = ({ onLogin }: LoginFormProps) => {
           <div className="w-full lg:w-1/2 bg-green-900 text-white p-8 flex flex-col items-center justify-center text-center py-12 lg:py-0">
             {/* Logo and Moot Court text - moved here */}
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="relative">
-                <Scale className="w-12 h-12 text-white drop-shadow-lg" />
-                <Gavel className="w-6 h-6 text-green-400 absolute -top-1 -right-1 drop-shadow-lg" />
-              </div>
+              <img src={Logo}></img>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-2 font-serif drop-shadow-lg">Moot Court</h1>
             <p className="text-xl text-green-400 font-light tracking-wide drop-shadow-md">Competition Portal</p>
             <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-green-900 mx-auto mt-4 rounded-full shadow-lg" />
 
