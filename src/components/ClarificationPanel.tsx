@@ -53,148 +53,96 @@ const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-8 p-6 bg-gray-50 min-h-screen">
       {/* Clarification Summary */}
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold">
-            Clarification Summary
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-8 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                <MessageSquare className="h-4 w-4 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {clarifications.filter(c => c.status === "answered").length}
-                </p>
-                <p className="text-sm text-gray-600">Answered</p>
-              </div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Clarification Summary
+        </h2>
+        
+        <div className="flex gap-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4 flex-1">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+              <MessageSquare className="h-8 w-8" style={{ color: '#2d4817' }} />
             </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                <MessageSquare className="h-4 w-4 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {clarifications.filter(c => c.status === "pending").length}
-                </p>
-                <p className="text-sm text-gray-600">Pending</p>
-              </div>
+            <div>
+              <p className="text-4xl font-bold text-gray-900">
+                {clarifications.filter(c => c.status === "answered").length}
+              </p>
+              <p className="text-gray-600">Answered</p>
             </div>
           </div>
           
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="font-medium text-sm text-gray-700 mb-2">Response Time:</p>
+          <div className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4 flex-1">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+              <MessageSquare className="h-8 w-8" style={{ color: '#2d4817' }} />
+            </div>
+            <div>
+              <p className="text-4xl font-bold text-gray-900">
+                {clarifications.filter(c => c.status === "pending").length}
+              </p>
+              <p className="text-gray-600">Pending</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-6 flex-1">
+            <p className="font-semibold text-gray-900 mb-3">Response Time:</p>
             <div className="text-sm text-gray-600 space-y-1">
               <p>• Urgent queries: Within 2 hours</p>
               <p>• General queries: Within 24 hours</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Submit Clarification */}
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold">
-            Submit Clarification
-          </CardTitle>
-          <CardDescription className="text-sm text-gray-600">
-            Ask questions about competition rules, procedures, or technical issues
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="subject" className="text-sm font-medium">Subject</Label>
-              <Input
-                id="subject"
-                placeholder="Brief subject of your question"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                className="bg-gray-50"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="question" className="text-sm font-medium">Question</Label>
-              <Textarea
-                id="question"
-                placeholder="Describe your question in detail..."
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                rows={4}
-                className="bg-gray-50"
-              />
-            </div>
-
-            <Button onClick={handleSubmit} className="w-full bg-green-800 hover:bg-green-700">
-              <Send className="h-4 w-4 mr-2" />
-              Submit Clarification
-            </Button>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Submit Clarification
+        </h2>
+        <p className="text-sm text-gray-600 mb-6">
+          Ask questions about competition rules, procedures, or technical issues
+        </p>
+        
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="subject" className="text-sm font-medium text-gray-700">Subject</Label>
+            <Input
+              id="subject"
+              placeholder="brief subject of your question"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="bg-gray-50 border-gray-300 h-12"
+            />
           </div>
-        </CardContent>
-      </Card>
+          
+          <div className="space-y-2">
+            <Label htmlFor="question" className="text-sm font-medium text-gray-700">Question</Label>
+            <Textarea
+              id="question"
+              placeholder="Describe your question in detail"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              rows={4}
+              className="bg-gray-50 border-gray-300 resize-none"
+            />
+          </div>
+
+          <Button 
+            onClick={handleSubmit} 
+            className="w-full text-white font-medium h-12 text-base"
+            style={{ backgroundColor: '#2d4817' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1f3310'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2d4817'}
+          >
+            <Send className="h-4 w-4 mr-2" />
+            Submit Clarification
+          </Button>
+        </div>
+      </div>
 
       {/* Clarification History */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-purple-500" />
-            Your Clarifications
-          </CardTitle>
-          <CardDescription>
-            View all your submitted questions and responses
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {clarifications.map((clarification) => (
-              <div key={clarification.id} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{clarification.subject}</h4>
-                    <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
-                      <Clock className="h-3 w-3" />
-                      Submitted: {clarification.submittedAt}
-                    </p>
-                  </div>
-                  <Badge 
-                    variant={clarification.status === "answered" ? "default" : "secondary"}
-                    className={clarification.status === "answered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}
-                  >
-                    {clarification.status}
-                  </Badge>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <p className="font-medium text-sm text-gray-700 mb-1">Your Question:</p>
-                    <p className="text-sm text-gray-900">{clarification.question}</p>
-                  </div>
-                  
-                  {clarification.response && (
-                    <div className="bg-blue-50 p-3 rounded-lg">
-                      <p className="font-medium text-sm text-blue-700 mb-1">Official Response:</p>
-                      <p className="text-sm text-blue-900">{clarification.response}</p>
-                      {clarification.respondedAt && (
-                        <p className="text-xs text-blue-600 mt-2">
-                          Responded: {clarification.respondedAt}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      
     </div>
   );
 };
