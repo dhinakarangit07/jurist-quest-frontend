@@ -1,6 +1,7 @@
 "use client"
 
 import { Scale, Gavel } from "lucide-react"
+import Logo from "@/assets/Logo.png"
 
 const LoadingScreen = () => {
   return (
@@ -13,18 +14,9 @@ const LoadingScreen = () => {
       </div>
       {/* Main loading content */}
       <div className="relative z-10 text-center">
-        {/* Logo with animation */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="relative animate-bounce">
-            <Scale className="w-16 h-16 text-amber-400 drop-shadow-lg animate-pulse" />
-            <Gavel
-              className="w-8 h-8 text-amber-300 absolute -top-2 -right-2 drop-shadow-lg animate-spin"
-              style={{ animationDuration: "3s" }}
-            />
-          </div>
-        </div>
+        
         {/* Title */}
-        <h1 className="text-5xl font-bold text-white mb-3 font-serif drop-shadow-lg animate-fade-in">Moot Court</h1>
+        <img src={Logo}></img>
         <p className="text-2xl text-amber-300 font-light tracking-wide drop-shadow-md mb-8 animate-fade-in delay-300">
           Competition Portal
         </p>
