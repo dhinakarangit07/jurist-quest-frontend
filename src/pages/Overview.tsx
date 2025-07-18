@@ -9,9 +9,9 @@ const Overview = ({ teamData, upcomingRounds }) => {
     teamName: "Legal Eagles",
     university: "University of Excellence",
     participants: [
-      { name: "John Doe", avatar: "/placeholder.svg?height=48&width=48" },
-      { name: "Jane Smith", avatar: "/placeholder.svg?height=48&width=48" },
-      { name: "Mike Taylor", avatar: "/placeholder.svg?height=48&width=48" },
+      { name: "John Doe", avatar: "😊" }, // Using emoji as dummy profile
+      { name: "Jane Smith", avatar: "😊" },
+      { name: "Mike Taylor", avatar: "😊" },
     ],
   }
 
@@ -91,15 +91,17 @@ const Overview = ({ teamData, upcomingRounds }) => {
             </div>
 
             {/* Competition Starts In Block */}
-            <div className="bg-white text-gray-900 border border-gray-200 rounded-lg p-4 text-center flex-shrink-0 w-full md:w-auto">
-              <p className="text-sm text-gray-700 mb-1">Competition starts in</p>
-              <div className="text-6xl font-bold mb-1 text-[#2d4817]">7</div>
-              <p className="text-sm text-gray-700">DAYS</p>
+            <div className="bg-white text-gray-900 border border-[#2d4817] rounded-lg p-4 text-center flex-shrink-0 w-full md:w-auto">
+              <p className="text-sm text-gray-900 mb-1">Competition starts in</p>
+              <div className="bg-[#2d4817] text-white rounded-md p-2 mb-2 inline-block min-w-[80px]">
+                <div className="text-6xl font-bold">7</div>
+              </div>
+              <p className="text-sm text-gray-900">DAYS</p>
             </div>
           </div>
         </CardContent>
       </Card>
-
+      
       {/* Upcoming Deadline Alert */}
       <Card className="border-red-200 bg-red-50 shadow-sm">
         <CardContent className="p-4">
