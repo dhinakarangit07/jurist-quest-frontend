@@ -86,7 +86,9 @@ const Index = ({ onLogin }: LoginFormProps) => {
         {/* The main container for the split form, now taking the original card's styling */}
         <div className="w-full max-w-4xl rounded-lg overflow-hidden shadow-2xl flex flex-col lg:flex-row bg-white/15 backdrop-blur-xl border-white/25">
           {/* Left Panel (Solid Dark Green) */}
-          <div className="w-full lg:w-1/2 bg-green-900 text-white p-8 flex flex-col items-center justify-center text-center py-12 lg:py-0">
+          <div className="w-full lg:w-1/2 [background-color:#2d4817] text-white p-8 flex flex-col items-center justify-center text-center py-12 lg:py-0">
+          
+
             {/* Logo and Moot Court text - moved here */}
             <div className="flex items-center justify-center gap-3 mb-4">
               <img src={Logo}></img>
@@ -162,7 +164,7 @@ const Index = ({ onLogin }: LoginFormProps) => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 bg-gradient-to-r from-green-900 to-green-800 hover:from-green-950 hover:to-green-900 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                className="w-full h-12 bg-gradient-to-r [background-color:#2d4817] hover:from-green-950 hover:to-green-900 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
