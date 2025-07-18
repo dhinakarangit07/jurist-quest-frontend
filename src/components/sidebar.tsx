@@ -41,7 +41,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
           {/* Dashboard - Featured Button */}
           <TabsTrigger 
             value="overview" 
-            className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-green-800 data-[state=active]:text-white font-medium"
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white font-medium"
           >
             <LayoutDashboard className="h-5 w-5" />
             <span>Dashboard</span>
@@ -50,7 +50,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
           {/* Regular Menu Items */}
           <TabsTrigger 
             value="downloads" 
-            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 border-none"
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <Download className="h-5 w-5" />
             <span>Download</span>
@@ -58,7 +58,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
 
           <TabsTrigger 
             value="memorial" 
-            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 border-none"
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <Upload className="h-5 w-5" />
             <span>Memorial Submission</span>
@@ -66,7 +66,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
 
           <TabsTrigger 
             value="clarifications" 
-            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 border-none"
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <MessageSquare className="h-5 w-5" />
             <span>Clarifications</span>
@@ -93,19 +93,19 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
               <div className="pl-8 pt-2 space-y-2">
                 <TabsTrigger
                   value="announcements"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 border-none"
+                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
                 >
                   <span>Updates</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="round-details"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 border-none"
+                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
                 >
                   <span>Round Details</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="support"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 border-none"
+                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
                 >
                   <span>Contact</span>
                 </TabsTrigger>
@@ -118,16 +118,16 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
       {/* Logout Button */}
       <div className="p-4 border-t border-gray-100">
         <Button 
-          variant="ghost" 
-          className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4"
-          onClick={() => {
-            // Handle logout logic here
-            window.location.href = "/"
-          }}
-        >
-          <LogOut className="h-5 w-5" />
-          <span>Logout</span>
-        </Button>
+  variant="ghost" 
+  className="w-full bg-[#2d4817] text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 hover:bg-[#2d4817] hover:text-white"
+  onClick={() => {
+    window.location.href = "/"
+  }}
+>
+  <LogOut className="h-5 w-5" />
+  <span>Logout</span>
+</Button>
+
       </div>
     </aside>
   )
