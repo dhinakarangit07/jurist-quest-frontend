@@ -80,21 +80,21 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
           <div>
             <Label className="text-base font-medium text-gray-900 mb-2 block">Media Upload</Label>
             <p className="text-sm text-gray-600 mb-4">Upload your memorial document here</p>
-            
+
             <div
-              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors"
+              className="border-2 border-dashed border-[#2d4817] rounded-lg p-8 text-center hover:border-[#2a4015] transition-colors"
               onDrop={handleDrop}
               onDragOver={handleDragOver}
             >
-              <Cloud className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <Cloud className="h-12 w-12 text-[#2d4817]" />
               <p className="text-gray-600 mb-2">
                 <span className="font-medium">Drag your file(s) or </span>
-                <label htmlFor="memorial-upload" className="text-blue-600 hover:text-blue-700 cursor-pointer underline">
+                <label htmlFor="memorial-upload" className="text-[#2d4817] hover:text-[#2a4015] cursor-pointer underline">
                   browse
                 </label>
               </p>
               <p className="text-sm text-gray-500 mb-4">Max 10 MB files are allowed</p>
-              
+
               <input
                 id="memorial-upload"
                 type="file"
@@ -102,7 +102,7 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
                 onChange={handleFileSelect}
                 className="hidden"
               />
-              
+
               {selectedFile && (
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                   <div className="flex items-center gap-2 justify-center">
@@ -136,14 +136,14 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
             <div className="flex gap-2">
               <Input
                 type="url"
-                placeholder="https://sharefile.xyz/file.jpg"
+                placeholder="https://sharefile.xyz/file.jpg "
                 value={urlUpload}
                 onChange={(e) => setUrlUpload(e.target.value)}
                 className="flex-1"
               />
-              <Button 
+              <Button
                 onClick={handleUrlUpload}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-[#2d4817] hover:bg-[#2a4015] text-white"
                 disabled={!urlUpload}
               >
                 Upload
