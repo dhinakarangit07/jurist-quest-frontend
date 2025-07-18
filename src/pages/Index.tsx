@@ -2,38 +2,22 @@
 
 import { useState } from "react"
 import LoginForm from "@/components/LoginForm"
-import Dashboard from "./dashboard"
-
+import { useNavigate } from "react-router-dom"
 
 const Index = () => {
+  const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [teamData, setTeamData] = useState({
-    teamCode: "",
-    teamName: "",
-    university: "",
-    participants: [],
-  })
 
   const handleLogin = (data: any) => {
-    setTeamData(data)
     setIsLoggedIn(true)
-  }
-
-  const handleLogout = () => {
-    setIsLoggedIn(false)
-    setTeamData({
-      teamCode: "",
-      teamName: "",
-      university: "",
-      participants: [],
-    })
+    navigate("/dashboard")
   }
 
   if (!isLoggedIn) {
     return <LoginForm onLogin={handleLogin} />
   }
 
-  return <Dashboard />
+  return null
 }
 
 export default Index
