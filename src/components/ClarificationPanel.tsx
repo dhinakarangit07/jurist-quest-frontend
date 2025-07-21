@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,8 +49,8 @@ const ClarificationPanel = () => {
     );
   }
 
-  const answeredCount = clarifications.filter(c => c.status === "answered").length;
-  const pendingCount = clarifications.filter(c => c.status === "pending").length;
+  const answeredCount = clarifications.filter(c => c.response).length;
+  const pendingCount = clarifications.filter(c => !c.response).length;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 p-6 bg-gray-50 min-h-screen">
@@ -164,8 +164,8 @@ const ClarificationPanel = () => {
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <p className="font-medium text-gray-900">{clarification.subject}</p>
-                        <Badge variant={clarification.status === 'answered' ? 'default' : 'secondary'}>
-                          {clarification.status}
+                        <Badge variant={clarification.response ? 'default' : 'secondary'}>
+                          {clarification.response ? 'answered' : 'pending'}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-500">
@@ -185,7 +185,7 @@ const ClarificationPanel = () => {
                           <p className="font-semibold text-gray-800">Response:</p>
                           <div className="prose max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: clarification.response.replace(/src="\//g, `src="${import.meta.env.VITE_API_URL}/`) }} />
                           <p className="text-xs text-gray-400 mt-2">
-                            Responded: {new Date(clarification.respondedAt!).toLocaleString()}
+                            Responded: {new Date(clarification.respondedAt).toLocaleString()}
                           </p>
                         </>
                       )}
@@ -207,4 +207,3 @@ const ClarificationPanel = () => {
 };
 
 export default ClarificationPanel;
-
