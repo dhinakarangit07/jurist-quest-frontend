@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Send, Loader2, ChevronDown, FileText } from "lucide-react";
 import useClarifications from "@/hooks/useClarifications";
+import ClarificationPanelSkeleton from "./ClarificationPanelSkeleton";
 
 const ClarificationPanel = () => {
   const [subject, setSubject] = useState("");
@@ -35,6 +36,18 @@ const ClarificationPanel = () => {
   const toggleClarification = (id: number) => {
     setOpenClarificationId(openClarificationId === id ? null : id);
   };
+
+  if (isLoading) {
+    return <ClarificationPanelSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        <p>{error.message}</p>
+      </div>
+    );
+  }
 
   const answeredCount = clarifications.filter(c => c.status === "answered").length;
   const pendingCount = clarifications.filter(c => c.status === "pending").length;

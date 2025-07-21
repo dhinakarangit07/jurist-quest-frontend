@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, CheckCircle, Cloud, Loader2 } from "lucide-react";
 import useMemorials from "@/hooks/useMemorials";
+import MemorialUploadSkeleton from "./MemorialUploadSkeleton";
 
 const MemorialUpload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -43,6 +44,18 @@ const MemorialUpload = () => {
       }
     }
   };
+
+  if (isLoading) {
+    return <MemorialUploadSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        <p>{error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -113,16 +126,7 @@ const MemorialUpload = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {isLoading ? (
-              <div className="text-center py-8 text-gray-500">
-                <Loader2 className="h-8 w-8 mx-auto mb-2 text-gray-400 animate-spin" />
-                <p>Loading history...</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-8 text-red-500">
-                <p>{error.message}</p>
-              </div>
-            ) : memorials.length > 0 ? (
+            {memorials.length > 0 ? (
               memorials.map((upload) => (
                 <div key={upload.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-3">

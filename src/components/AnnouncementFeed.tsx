@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Megaphone, Trophy, Loader2, ChevronDown } from "lucide-react";
+import { Calendar, Megaphone, Trophy, ChevronDown } from "lucide-react";
 import useAnnouncements from "@/hooks/useAnnouncements";
+import AnnouncementFeedSkeleton from "./AnnouncementFeedSkeleton";
 
 const AnnouncementFeed = () => {
   const { announcements, isLoading, error } = useAnnouncements();
@@ -11,6 +12,18 @@ const AnnouncementFeed = () => {
   const toggleAnnouncement = (id: number) => {
     setOpenAnnouncementId(openAnnouncementId === id ? null : id);
   };
+
+  if (isLoading) {
+    return <AnnouncementFeedSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        <p>{error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -62,17 +75,7 @@ const AnnouncementFeed = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {isLoading ? (
-              <div className="text-center py-8 text-gray-500">
-                <Loader2 className="h-8 w-8 mx-auto mb-2 text-gray-400 animate-spin" />
-                <p>Loading announcements...</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-8 text-red-500">
-                <p>{error.message}</p>
-              </div>
-            ) : (
-              announcements.map((announcement) => (
+            {announcements.map((announcement) => (
                 <div key={announcement.id} className="border-b border-gray-200 last:border-b-0">
                   <button
                     className="w-full flex justify-between items-center py-4 px-4 text-left"
@@ -93,7 +96,7 @@ const AnnouncementFeed = () => {
                   )}
                 </div>
               ))
-            )}
+            }
           </div>
         </CardContent>
       </Card>

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, FileText } from "lucide-react";
 import useDownloads from "@/hooks/useDownloads";
+import DownloadCenterSkeleton from "./DownloadCenterSkeleton";
 
 const DownloadCenter = () => {
   const { downloads, isLoading, error } = useDownloads();
@@ -12,7 +13,7 @@ const DownloadCenter = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <DownloadCenterSkeleton />;
   }
 
   if (error) {

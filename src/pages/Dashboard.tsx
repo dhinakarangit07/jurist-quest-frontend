@@ -32,6 +32,7 @@ import RoundDetails from "@/components/RoundDetails"
 import Sidebar from "@/components/sidebar";
 
 import ContactPage from "@/components/ContactPage"
+import DashboardSkeleton from "./DashboardSkeleton";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -72,7 +73,7 @@ const Dashboard = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <DashboardSkeleton />;
   }
 
   if (error) {

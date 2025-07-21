@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, School, AlertCircle } from "lucide-react"
 import { useEffect, useState } from "react"
+import OverviewSkeleton from "./OverviewSkeleton"
 
 const Overview = ({ overviewData }) => {
   const [daysUntilCompetition, setDaysUntilCompetition] = useState(0)
@@ -23,7 +24,7 @@ const Overview = ({ overviewData }) => {
   }, [overviewData])
 
   if (!overviewData) {
-    return <div>Loading...</div>
+    return <OverviewSkeleton />
   }
 
   const { team_details, competition_progress, upcoming_deadline } = overviewData

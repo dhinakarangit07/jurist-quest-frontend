@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, User, ExternalLink } from "lucide-react"
 import useRounds from "@/hooks/useRounds";
+import RoundDetailsSkeleton from "./RoundDetailsSkeleton";
 
 const RoundDetails = () => {
   const { rounds, isLoading, error } = useRounds();
@@ -17,7 +18,7 @@ const RoundDetails = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <RoundDetailsSkeleton/>;
   }
 
   if (error) {
