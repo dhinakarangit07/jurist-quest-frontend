@@ -162,13 +162,9 @@ const Overview = ({ overviewData }) => {
             <div className="flex justify-center gap-4 flex-wrap">
               {team_details.participants.map((participant, index) => (
                 <div key={index} className="flex flex-col items-center text-center">
-                  <img
-                    src={participant.avatar || "/placeholder.svg"}
-                    alt={participant.name}
-                    width={48}
-                    height={48}
-                    className="rounded-full object-cover border-2 border-[#2d4817] mb-2"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-[#2d4817] text-white flex items-center justify-center text-xl font-semibold border-2 border-[#2d4817] mb-2">
+                    {participant.name.charAt(0).toUpperCase()}
+                  </div>
                   <p className="text-xs text-gray-600">{participant.name}</p>
                 </div>
               ))}
