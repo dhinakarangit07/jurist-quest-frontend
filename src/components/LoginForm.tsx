@@ -124,7 +124,7 @@ const Index = ({ onLogin }: LoginFormProps) => {
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-white/90 font-medium">
-                  Username
+                  Team ID
                 </Label>
                 <Input
                   id="username"
@@ -187,15 +187,6 @@ const Index = ({ onLogin }: LoginFormProps) => {
               </Button>
             </form>
 
-            {/* Additional Options */}
-            <div className="mt-8 pt-6 border-t border-white/25">
-              < a href="/register" className="text-center text-white/80 text-sm">
-                New participant?{" "}
-                <button className="text-white-900 hover:text-green-300 font-medium transition-colors">
-                  Register for Competition
-                </button>
-              </a>
-            </div>
           </div>
         </div>
       </div>
