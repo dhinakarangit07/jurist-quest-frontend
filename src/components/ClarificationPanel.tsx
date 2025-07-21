@@ -5,52 +5,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Send, MessageCircle, Clock } from "lucide-react";
+import { MessageSquare, Send, Loader2, ChevronDown, FileText } from "lucide-react";
+import useClarifications from "@/hooks/useClarifications";
 
-interface ClarificationPanelProps {
-  teamCode: string;
-}
-
-const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
+const ClarificationPanel = () => {
   const [subject, setSubject] = useState("");
   const [question, setQuestion] = useState("");
-  const [clarifications, setClarifications] = useState([
-    {
-      id: 1,
-      subject: "Memorial formatting requirements",
-      question: "What is the maximum word limit for the memorial?",
-      response: "The memorial should not exceed 2500 words excluding footnotes and bibliography.",
-      status: "answered",
-      submittedAt: "2024-12-04 10:30",
-      respondedAt: "2024-12-04 15:45"
-    },
-    {
-      id: 2,
-      subject: "Virtual hearing procedures",
-      question: "What platform will be used for virtual hearings and what are the technical requirements?",
-      response: "",
-      status: "pending",
-      submittedAt: "2024-12-05 09:15",
-      respondedAt: null
-    }
-  ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openClarificationId, setOpenClarificationId] = useState<number | null>(null);
 
-  const handleSubmit = () => {
+  const { clarifications, isLoading, error, submitClarification } = useClarifications();
+
+  const handleSubmit = async () => {
     if (subject && question) {
-      const newClarification = {
-        id: clarifications.length + 1,
-        subject,
-        question,
-        response: "",
-        status: "pending",
-        submittedAt: new Date().toLocaleString(),
-        respondedAt: null
-      };
-      setClarifications([newClarification, ...clarifications]);
-      setSubject("");
-      setQuestion("");
+      setIsSubmitting(true);
+      try {
+        await submitClarification(subject, question);
+        setSubject("");
+        setQuestion("");
+      } catch (err) {
+        // You can add a toast notification here to show the error
+        console.error(err);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
+
+  const toggleClarification = (id: number) => {
+    setOpenClarificationId(openClarificationId === id ? null : id);
+  };
+
+  const answeredCount = clarifications.filter(c => c.status === "answered").length;
+  const pendingCount = clarifications.filter(c => c.status === "pending").length;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 p-6 bg-gray-50 min-h-screen">
@@ -60,32 +47,28 @@ const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
           Clarification Summary
         </h2>
         
-        <div className="flex gap-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4 flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-              <MessageSquare className="h-8 w-8" style={{ color: '#2d4817' }} />
+              <MessageSquare className="h-8 w-8 text-[#2d4817]" />
             </div>
             <div>
-              <p className="text-4xl font-bold text-gray-900">
-                {clarifications.filter(c => c.status === "answered").length}
-              </p>
+              <p className="text-4xl font-bold text-gray-900">{answeredCount}</p>
               <p className="text-gray-600">Answered</p>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4 flex-1">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-              <MessageSquare className="h-8 w-8" style={{ color: '#2d4817' }} />
+              <MessageSquare className="h-8 w-8 text-[#2d4817]" />
             </div>
             <div>
-              <p className="text-4xl font-bold text-gray-900">
-                {clarifications.filter(c => c.status === "pending").length}
-              </p>
+              <p className="text-4xl font-bold text-gray-900">{pendingCount}</p>
               <p className="text-gray-600">Pending</p>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg border border-gray-200 p-6 flex-1">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
             <p className="font-semibold text-gray-900 mb-3">Response Time:</p>
             <div className="text-sm text-gray-600 space-y-1">
               <p>• Urgent queries: Within 2 hours</p>
@@ -109,7 +92,7 @@ const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
             <Label htmlFor="subject" className="text-sm font-medium text-gray-700">Subject</Label>
             <Input
               id="subject"
-              placeholder="brief subject of your question"
+              placeholder="Brief subject of your question"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               className="bg-gray-50 border-gray-300 h-12"
@@ -130,21 +113,85 @@ const ClarificationPanel = ({ teamCode }: ClarificationPanelProps) => {
 
           <Button 
             onClick={handleSubmit} 
-            className="w-full text-white font-medium h-12 text-base"
-            style={{ backgroundColor: '#2d4817' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1f3310'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2d4817'}
+            disabled={isSubmitting || !subject || !question}
+            className="w-full text-white font-medium h-12 text-base bg-[#2d4817] hover:bg-[#2a4015]"
           >
-            <Send className="h-4 w-4 mr-2" />
+            {isSubmitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
             Submit Clarification
           </Button>
         </div>
       </div>
 
       {/* Clarification History */}
-      
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl text-gray-900">Clarification History</CardTitle>
+          <CardDescription>
+            View your past clarification requests and their responses
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {isLoading ? (
+              <div className="text-center py-8 text-gray-500">
+                <Loader2 className="h-8 w-8 mx-auto mb-2 text-gray-400 animate-spin" />
+                <p>Loading history...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500">
+                <p>{error.message}</p>
+              </div>
+            ) : clarifications.length > 0 ? (
+              clarifications.map((clarification) => (
+                <div key={clarification.id} className="border rounded-lg">
+                  <button
+                    className="w-full flex justify-between items-center p-4 text-left"
+                    onClick={() => toggleClarification(clarification.id)}
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium text-gray-900">{clarification.subject}</p>
+                        <Badge variant={clarification.status === 'answered' ? 'default' : 'secondary'}>
+                          {clarification.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        Submitted: {new Date(clarification.submittedAt).toLocaleString()}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      className={`h-5 w-5 text-gray-500 transform transition-transform ${openClarificationId === clarification.id ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {openClarificationId === clarification.id && (
+                    <div className="p-4 border-t border-gray-200 bg-gray-50">
+                      <p className="font-semibold text-gray-800">Question:</p>
+                      <p className="mb-4 text-gray-600">{clarification.question}</p>
+                      {clarification.response && (
+                        <>
+                          <p className="font-semibold text-gray-800">Response:</p>
+                          <div className="prose max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: clarification.response.replace(/src="\//g, `src="${import.meta.env.VITE_API_URL}/`) }} />
+                          <p className="text-xs text-gray-400 mt-2">
+                            Responded: {new Date(clarification.respondedAt!).toLocaleString()}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <FileText className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <p>No clarification requests yet.</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
 export default ClarificationPanel;
+

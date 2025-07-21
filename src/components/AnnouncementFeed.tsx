@@ -1,35 +1,16 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bell, Calendar, Clock, ExternalLink, Megaphone, Trophy } from "lucide-react";
+import { Calendar, Megaphone, Trophy, Loader2, ChevronDown } from "lucide-react";
+import useAnnouncements from "@/hooks/useAnnouncements";
 
 const AnnouncementFeed = () => {
-  const announcements = [
-    {
-      id: 1,
-      name: "Round 1 Schedule",
-      description: "The preliminary round 1 schedule has been published. Please check your assigned time slots and courtroom details",
-      dateTime: "2024-12-05 16:30",
-      hasLink: true,
-      linkText: "View Schedule"
-    },
-    {
-      id: 2,
-      name: "Round 1 Schedule",
-      description: "The preliminary round 1 schedule has been published. Please check your assigned time slots and courtroom details",
-      dateTime: "2024-12-05 16:30",
-      hasLink: true,
-      linkText: "View Schedule"
-    },
-    {
-      id: 3,
-      name: "Round 1 Schedule",
-      description: "The preliminary round 1 schedule has been published. Please check your assigned time slots and courtroom details",
-      dateTime: "2024-12-05 16:30",
-      hasLink: true,
-      linkText: "View Schedule"
-    }
-  ];
+  const { announcements, isLoading, error } = useAnnouncements();
+  const [openAnnouncementId, setOpenAnnouncementId] = useState<number | null>(null);
+
+  const toggleAnnouncement = (id: number) => {
+    setOpenAnnouncementId(openAnnouncementId === id ? null : id);
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -80,55 +61,39 @@ const AnnouncementFeed = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-medium text-gray-700">Name</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700">Description</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700">Date & Time</th>
-                  <th className="text-right py-3 px-4 font-medium text-gray-700">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {announcements.map((announcement) => (
-                  <tr key={announcement.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-4 px-4">
-                      <div className="font-medium text-gray-900">
-                        {announcement.name}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="text-sm text-gray-700 max-w-md">
-                        {announcement.description}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="text-sm text-gray-600">
-                        {new Date(announcement.dateTime).toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit"
-                        })}
-                        </div>
-                      </td>
-                    <td className="py-4 px-4 text-right">
-                      {announcement.hasLink && (
-                        <Button 
-                          size="sm" 
-                          className="bg-[#2d4817] hover:bg-[#2a4015] text-white flex items-center gap-1"
-                        >
-                          <ExternalLink className="h-3 w-3 mr-1" />
-                          {announcement.linkText}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-2">
+            {isLoading ? (
+              <div className="text-center py-8 text-gray-500">
+                <Loader2 className="h-8 w-8 mx-auto mb-2 text-gray-400 animate-spin" />
+                <p>Loading announcements...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500">
+                <p>{error.message}</p>
+              </div>
+            ) : (
+              announcements.map((announcement) => (
+                <div key={announcement.id} className="border-b border-gray-200 last:border-b-0">
+                  <button
+                    className="w-full flex justify-between items-center py-4 px-4 text-left"
+                    onClick={() => toggleAnnouncement(announcement.id)}
+                  >
+                    <div>
+                      <p className="font-medium text-gray-900">{announcement.name}</p>
+                      <p className="text-sm text-gray-500">{new Date(announcement.created_at).toLocaleString()}</p>
+                    </div>
+                    <ChevronDown
+                      className={`h-5 w-5 text-gray-500 transform transition-transform ${openAnnouncementId === announcement.id ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {openAnnouncementId === announcement.id && (
+                    <div className="p-4 bg-gray-50">
+                      <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: announcement.description.replace(/src="\//g, `src="${import.meta.env.VITE_API_URL}/`) }} />
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>

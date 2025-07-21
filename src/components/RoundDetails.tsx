@@ -1,20 +1,37 @@
 "use client"
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, User, ExternalLink } from "lucide-react"
+import useRounds from "@/hooks/useRounds";
 
 const RoundDetails = () => {
-  // Mock data for the current round
-  const currentRound = {
-    round: "Preliminary Round 1",
-    date: "December 10, 2024",
-    time: "10:00 AM - 11:30 AM",
-    venue: "Virtual Court Room A",
-    judge: "Hon. Justice Sarah Miller",
-    opponent: "Team DEF456 - Legal Warriors",
-    opponentSchool: "State University Law School",
-    status: "upcoming",
+  const { rounds, isLoading, error } = useRounds();
+  const [teamData, setTeamData] = useState(null);
+
+  useEffect(() => {
+    const storedTeamData = localStorage.getItem("team_data");
+    if (storedTeamData) {
+      setTeamData(JSON.parse(storedTeamData));
+    }
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  // Assuming you want to display the first round for now
+  const currentRound = rounds[0];
+
+  if (!currentRound) {
+    return <div>No rounds found.</div>;
+  }
+
+  const opponent = currentRound.team1?.id === teamData?.id ? currentRound.team2 : currentRound.team1;
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
@@ -28,7 +45,7 @@ const RoundDetails = () => {
           <CardContent className="space-y-6 p-6">
             {/* Round Title and Status */}
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">{currentRound.round}</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{currentRound.round_name}</h2>
               <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border border-orange-200">
                 {currentRound.status}
               </Badge>
@@ -78,8 +95,8 @@ const RoundDetails = () => {
               <div>
                 <h3 className="font-medium text-gray-700 mb-2 text-right">Opponent Team</h3>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900">{currentRound.opponent}</p>
-                  <p className="text-gray-600 text-sm mt-1">{currentRound.opponentSchool}</p>
+                  <p className="font-semibold text-gray-900">{opponent?.team_name}</p>
+                  <p className="text-gray-600 text-sm mt-1">{opponent?.institution_name}</p>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -34,33 +35,48 @@ import ContactPage from "@/components/ContactPage"
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [teamData] = useState({
-    teamCode: "ABC123",
-    teamName: "The Legal Eagles",
-    university: "University of Law",
-    participants: ["John Doe", "Jane Smith", "Peter Jones"],
-  })
+  const [overviewData, setOverviewData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data for demonstration
-  const competitionDate = new Date("2024-12-15T09:00:00")
-  const upcomingRounds = [
-    {
-      round: "Preliminary Round 1",
-      date: "2024-12-10T10:00:00",
-      venue: "Virtual Court Room A",
-      opponent: "Team DEF456",
-      status: "upcoming",
-    },
-    {
-      round: "Memorial Submission",
-      date: "2024-12-08T23:59:59",
-      venue: "Online Portal",
-      status: "urgent",
-    },
-  ]
+
+  useEffect(() => {
+    const fetchOverviewData = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          // Handle case where user is not logged in
+          setError("Not authenticated");
+          setLoading(false);
+          return;
+        }
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/overview/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setOverviewData(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOverviewData();
+  }, []);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -88,7 +104,7 @@ const Dashboard = () => {
             
 
             <TabsContent value="overview">
-              <Overview teamData={teamData} upcomingRounds={upcomingRounds} />
+              <Overview overviewData={overviewData} />
             </TabsContent>
 
             <TabsContent value="downloads">
@@ -96,11 +112,11 @@ const Dashboard = () => {
             </TabsContent>
 
             <TabsContent value="memorial">
-              <MemorialUpload teamCode={teamData.teamCode} />
+              <MemorialUpload teamCode={overviewData?.team_details?.team_code} />
             </TabsContent>
 
             <TabsContent value="clarifications">
-              <ClarificationPanel teamCode={teamData.teamCode} />
+              <ClarificationPanel teamCode={overviewData?.team_details?.team_code} />
             </TabsContent>
 
             <TabsContent value="announcements">

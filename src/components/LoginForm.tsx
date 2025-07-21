@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import LoadingScreen from "@/components/LoadingScreen"
 import Logo from "@/assets/Logo.png"
+import axios from "axios"
 
 interface LoginFormProps {
   onLogin: (teamData: any) => void
@@ -16,7 +17,7 @@ interface LoginFormProps {
 
 const Index = ({ onLogin }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false)
-  const [teamCode, setTeamCode] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isPageLoading, setIsPageLoading] = useState(true)
@@ -35,24 +36,33 @@ const Index = ({ onLogin }: LoginFormProps) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Mock authentication - same as original working code
-    setTimeout(() => {
-      if (teamCode === "ABC123" && password === "moot2024") {
-        onLogin({
-          teamCode: "ABC123",
-          teamName: "Legal Eagles",
-          university: "University of Excellence",
-          participants: ["John Doe", "Jane Smith", "Mike Johnson"],
-        })
-      } else {
-        toast({
-          title: "Authentication Failed",
-          description: "Invalid team code or password. Please try again.",
-          variant: "destructive",
-        })
-      }
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/token/`, {
+        username: username,
+        password: password,
+      });
+      const { access, refresh } = response.data;
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+      
+      const userDetailsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/team/details/`, {
+        headers: {
+          Authorization: `Bearer ${access}`
+        }
+      });
+
+      localStorage.setItem('team_data', JSON.stringify(userDetailsResponse.data));
+
+      onLogin(userDetailsResponse.data);
+    } catch (error) {
+      toast({
+        title: "Authentication Failed",
+        description: "Invalid team code or password. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   if (isPageLoading) {
@@ -113,15 +123,15 @@ const Index = ({ onLogin }: LoginFormProps) => {
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="teamCode" className="text-white/90 font-medium">
-                  Team Code
+                <Label htmlFor="username" className="text-white/90 font-medium">
+                  Username
                 </Label>
                 <Input
-                  id="teamCode"
+                  id="username"
                   type="text"
-                  placeholder="Enter your team code"
-                  value={teamCode}
-                  onChange={(e) => setTeamCode(e.target.value)}
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                   className="bg-white/10 border-white/25 text-white placeholder:text-white/60 h-12 focus:border-green-500 focus:ring-green-500/30 backdrop-blur-sm"
                 />
@@ -179,33 +189,12 @@ const Index = ({ onLogin }: LoginFormProps) => {
 
             {/* Additional Options */}
             <div className="mt-8 pt-6 border-t border-white/25">
-              <div className="text-center text-white/80 text-sm">
+              < a href="/register" className="text-center text-white/80 text-sm">
                 New participant?{" "}
                 <button className="text-white-900 hover:text-green-300 font-medium transition-colors">
                   Register for Competition
                 </button>
-              </div>
-
-              <div className="mt-4 text-center">
-                <button className="text-white/70 hover:text-white/90 text-sm transition-colors">
-                  Competition Guidelines & Rules
-                </button>
-              </div>
-            </div>
-
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/25">
-              <p className="text-sm font-bold text-green-800 mb-2 text-center">Demo Credentials</p>
-              <div className="space-y-1">
-                <p className="text-sm text-white/80 flex justify-between">
-                  <span>Team Code:</span>
-                  <span className="font-mono font-bold text-white-400">ABC123</span>
-                </p>
-                <p className="text-sm text-white/80 flex justify-between">
-                  <span>Password:</span>
-                  <span className="font-mono font-bold text-white-400">moot2024</span>
-                </p>
-              </div>
+              </a>
             </div>
           </div>
         </div>

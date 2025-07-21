@@ -2,50 +2,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, FileText } from "lucide-react";
+import useDownloads from "@/hooks/useDownloads";
 
 const DownloadCenter = () => {
-  const downloads = [
-    { 
-      name: "Moot Problem 2024", 
-      format: "PDF", 
-      size: "2.4 MB", 
-      uploadedOn: "December 14, 2024", 
-      important: true 
-    },
-    { 
-      name: "Rules & Regulations", 
-      format: "PDF", 
-      size: "2.4 MB", 
-      uploadedOn: "December 14, 2024", 
-      important: true 
-    },
-    { 
-      name: "Schedule", 
-      format: "PDF", 
-      size: "2.4 MB", 
-      uploadedOn: "December 14, 2024", 
-      important: true 
-    },
-    { 
-      name: "Score sheets format", 
-      format: "PDF", 
-      size: "2.4 MB", 
-      uploadedOn: "December 14, 2024", 
-      important: false 
-    },
-    { 
-      name: "Certificates", 
-      format: "PDF", 
-      size: "2.4 MB", 
-      uploadedOn: "December 14, 2024", 
-      important: false 
-    }
-  ];
+  const { downloads, isLoading, error } = useDownloads();
 
-  const handleDownload = (fileName: string) => {
-    // Mock download function
-    console.log(`Downloading: ${fileName}`);
+  const handleDownload = (fileUrl: string) => {
+    window.open(fileUrl, "_blank");
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -84,11 +56,11 @@ const DownloadCenter = () => {
                     </td>
                     <td className="py-4 px-4 text-gray-600">{item.format}</td>
                     <td className="py-4 px-4 text-gray-600">{item.size}</td>
-                    <td className="py-4 px-4 text-gray-600">{item.uploadedOn}</td>
+                    <td className="py-4 px-4 text-gray-600">{item.created_at}</td>
                     <td className="py-4 px-4">
                       <Button
                         size="sm"
-                        onClick={() => handleDownload(item.name)}
+                        onClick={() => handleDownload(item.file)}
                         className="bg-[#2d4817] hover:bg-[#2a4015] text-white flex items-center gap-1"
                       >
                         <Download className="h-4 w-4" />

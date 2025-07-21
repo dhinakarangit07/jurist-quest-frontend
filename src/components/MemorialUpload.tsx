@@ -1,26 +1,13 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Upload, FileText, CheckCircle, Cloud } from "lucide-react";
+import { Upload, FileText, CheckCircle, Cloud, Loader2 } from "lucide-react";
+import useMemorials from "@/hooks/useMemorials";
 
-interface MemorialUploadProps {
-  teamCode?: string;
-}
-
-const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
+const MemorialUpload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [urlUpload, setUrlUpload] = useState("");
-  const [uploadHistory, setUploadHistory] = useState([
-    {
-      id: 1,
-      fileName: "Memorial_ABC123_v1.pdf",
-      uploadDate: "2024-12-05 14:30",
-      status: "submitted",
-      version: 1
-    }
-  ]);
+  const { memorials, isLoading, error, uploadMemorial } = useMemorials();
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -41,28 +28,19 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
     event.preventDefault();
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (selectedFile) {
-      const newUpload = {
-        id: uploadHistory.length + 1,
-        fileName: selectedFile.name,
-        uploadDate: new Date().toLocaleString(),
-        status: "submitted",
-        version: uploadHistory.length + 1
-      };
-      setUploadHistory([newUpload, ...uploadHistory]);
-      setSelectedFile(null);
-      // Reset file input
-      const fileInput = document.getElementById('memorial-upload') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-    }
-  };
-
-  const handleUrlUpload = () => {
-    if (urlUpload) {
-      // Handle URL upload logic here
-      console.log("Uploading from URL:", urlUpload);
-      setUrlUpload("");
+      setIsUploading(true);
+      try {
+        await uploadMemorial(selectedFile);
+        setSelectedFile(null);
+        const fileInput = document.getElementById('memorial-upload') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+      } catch (uploadError) {
+        // Handle upload error display
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -75,18 +53,14 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
             Upload your memorial document (PDF format only, max 10MB)
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Media Upload Section */}
+        <CardContent>
           <div>
-            <Label className="text-base font-medium text-gray-900 mb-2 block">Media Upload</Label>
-            <p className="text-sm text-gray-600 mb-4">Upload your memorial document here</p>
-
             <div
               className="border-2 border-dashed border-[#2d4817] rounded-lg p-8 text-center hover:border-[#2a4015] transition-colors"
               onDrop={handleDrop}
               onDragOver={handleDragOver}
             >
-              <Cloud className="h-12 w-12 text-[#2d4817]" />
+              <Cloud className="h-12 w-12 text-[#2d4817] mx-auto" />
               <p className="text-gray-600 mb-2">
                 <span className="font-medium">Drag your file(s) or </span>
                 <label htmlFor="memorial-upload" className="text-[#2d4817] hover:text-[#2a4015] cursor-pointer underline">
@@ -115,39 +89,15 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
                 </div>
               )}
             </div>
+            <Button onClick={handleUpload} disabled={!selectedFile || isUploading} className="w-full mt-4 bg-[#2d4817] hover:bg-[#2a4015] text-white">
+              {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+              Upload
+            </Button>
 
             <div className="mt-3 space-y-1 text-xs text-gray-500">
               <p>• Only PDF files are accepted</p>
               <p>• Maximum file size: 10MB</p>
-              <p>• File naming: Memorial_{teamCode}_v[version].pdf</p>
-            </div>
-          </div>
-
-          {/* OR Divider */}
-          <div className="flex items-center gap-4">
-            <div className="flex-1 h-px bg-gray-200"></div>
-            <span className="text-sm text-gray-500 font-medium">OR</span>
-            <div className="flex-1 h-px bg-gray-200"></div>
-          </div>
-
-          {/* Upload from URL */}
-          <div>
-            <Label className="text-base font-medium text-gray-900 mb-2 block">Upload from URL</Label>
-            <div className="flex gap-2">
-              <Input
-                type="url"
-                placeholder="https://sharefile.xyz/file.jpg "
-                value={urlUpload}
-                onChange={(e) => setUrlUpload(e.target.value)}
-                className="flex-1"
-              />
-              <Button
-                onClick={handleUrlUpload}
-                className="bg-[#2d4817] hover:bg-[#2a4015] text-white"
-                disabled={!urlUpload}
-              >
-                Upload
-              </Button>
+              <p>• File naming: Memorial_TeamName_v[version].pdf</p>
             </div>
           </div>
         </CardContent>
@@ -163,14 +113,23 @@ const MemorialUpload = ({ teamCode = "ABC123" }: MemorialUploadProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {uploadHistory.length > 0 ? (
-              uploadHistory.map((upload) => (
+            {isLoading ? (
+              <div className="text-center py-8 text-gray-500">
+                <Loader2 className="h-8 w-8 mx-auto mb-2 text-gray-400 animate-spin" />
+                <p>Loading history...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500">
+                <p>{error.message}</p>
+              </div>
+            ) : memorials.length > 0 ? (
+              memorials.map((upload) => (
                 <div key={upload.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-3">
                     <FileText className="h-5 w-5 text-gray-600" />
                     <div>
-                      <p className="font-medium text-gray-900">{upload.fileName}</p>
-                      <p className="text-sm text-gray-500">{upload.uploadDate}</p>
+                      <p className="font-medium text-gray-900">{upload.file.split('/').pop()}</p>
+                      <p className="text-sm text-gray-500">{new Date(upload.created_at).toLocaleString()}</p>
                     </div>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />

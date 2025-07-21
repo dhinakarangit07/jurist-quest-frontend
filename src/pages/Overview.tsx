@@ -1,21 +1,32 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, School, AlertCircle } from "lucide-react"
-// Removed: import Image from "next/image"
+import { useEffect, useState } from "react"
 
-const Overview = ({ teamData, upcomingRounds }) => {
-  // Sample data to match the design
-  const sampleTeamData = {
-    teamCode: "ABC123",
-    teamName: "Legal Eagles",
-    university: "University of Excellence",
-    participants: [
-      { name: "John Doe", avatar: "😊" }, // Using emoji as dummy profile
-      { name: "Jane Smith", avatar: "😊" },
-      { name: "Mike Taylor", avatar: "😊" },
-    ],
+const Overview = ({ overviewData }) => {
+  const [daysUntilCompetition, setDaysUntilCompetition] = useState(0)
+  const [daysUntilDeadline, setDaysUntilDeadline] = useState(0)
+
+  useEffect(() => {
+    if (overviewData?.upcoming_deadline?.deadline) {
+      const deadlineDate = new Date(overviewData.upcoming_deadline.deadline)
+      const now = new Date()
+      const diffTime = deadlineDate.getTime() - now.getTime()
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      setDaysUntilDeadline(diffDays)
+    }
+    // Placeholder for competition start date
+    const competitionStartDate = new Date("2025-12-15T09:00:00")
+    const now = new Date()
+    const diffTime = competitionStartDate.getTime() - now.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    setDaysUntilCompetition(diffDays)
+  }, [overviewData])
+
+  if (!overviewData) {
+    return <div>Loading...</div>
   }
 
-  const actualTeamData = teamData || sampleTeamData
+  const { team_details, competition_progress, upcoming_deadline } = overviewData
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -47,7 +58,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
                       <div className="h-2 w-full bg-gray-200 rounded-full">
                         <div className="h-full w-[80%] bg-[#2d4817] rounded-full"></div> {/* Progress bar */}
                       </div>
-                      <div className="text-xs text-gray-500">32 Teams</div>
+                      <div className="text-xs text-gray-500">{competition_progress.total_teams} Teams</div>
                     </div>
                   </div>
 
@@ -65,7 +76,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
                       <div className="h-2 w-full bg-gray-200 rounded-full">
                         <div className="h-full w-[50%] bg-[#2d4817] rounded-full"></div> {/* Progress bar */}
                       </div>
-                      <div className="text-xs text-gray-500">16 Rounds</div>
+                      <div className="text-xs text-gray-500">{competition_progress.qualified_for_round_2} Teams</div>
                     </div>
                   </div>
 
@@ -83,7 +94,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
                       <div className="h-2 w-full bg-gray-200 rounded-full">
                         <div className="h-full w-[75%] bg-[#2d4817] rounded-full"></div> {/* Progress bar */}
                       </div>
-                      <div className="text-xs text-gray-500">2 Rounds</div>
+                      <div className="text-xs text-gray-500">{competition_progress.rounds_completed} Rounds</div>
                     </div>
                   </div>
                 </div>
@@ -94,7 +105,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
             <div className="bg-white text-gray-900 border border-[#2d4817] rounded-lg p-4 text-center flex-shrink-0 w-full md:w-auto">
               <p className="text-sm text-gray-900 mb-1">Competition starts in</p>
               <div className="bg-[#2d4817] text-white rounded-md p-2 mb-2 inline-block min-w-[80px]">
-                <div className="text-6xl font-bold">7</div>
+                <div className="text-6xl font-bold">{daysUntilCompetition}</div>
               </div>
               <p className="text-sm text-gray-900">DAYS</p>
             </div>
@@ -109,7 +120,9 @@ const Overview = ({ teamData, upcomingRounds }) => {
             <AlertCircle className="h-5 w-5 text-red-500" />
             <div>
               <h3 className="font-semibold text-red-800">Upcoming Deadline</h3>
-              <p className="text-sm text-red-600">Memorial submission deadline is in 2 days (Dec 8, 11:59 PM)</p>
+              <p className="text-sm text-red-600">
+                {upcoming_deadline.title} submission deadline is in {daysUntilDeadline} days ({new Date(upcoming_deadline.deadline).toLocaleDateString()})
+              </p>
             </div>
           </div>
         </CardContent>
@@ -125,7 +138,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
             </div>
             <h3 className="font-semibold text-gray-900">Team</h3>
             <p className="text-sm text-gray-600">
-              {actualTeamData.teamCode} ({actualTeamData.teamName})
+              {team_details.team_code} ({team_details.team_name})
             </p>
           </CardContent>
         </Card>
@@ -137,7 +150,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
               <School className="h-6 w-6 text-[#2d4817]" />
             </div>
             <h3 className="font-semibold text-gray-900">University</h3>
-            <p className="text-sm text-gray-600">{actualTeamData.university}</p>
+            <p className="text-sm text-gray-600">{team_details.university}</p>
           </CardContent>
         </Card>
 
@@ -146,7 +159,7 @@ const Overview = ({ teamData, upcomingRounds }) => {
           <CardContent className="p-6">
             <h3 className="font-semibold text-gray-900 mb-4 text-center">Team Members</h3>
             <div className="flex justify-center gap-4 flex-wrap">
-              {actualTeamData.participants.map((participant, index) => (
+              {team_details.participants.map((participant, index) => (
                 <div key={index} className="flex flex-col items-center text-center">
                   <img
                     src={participant.avatar || "/placeholder.svg"}
