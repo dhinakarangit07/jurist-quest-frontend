@@ -27,41 +27,6 @@ const AnnouncementFeed = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Quick Actions Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white border border-[#2d4817] rounded-lg shadow-sm">
-          <CardContent className="p-6 text-center">
-            <Calendar className="h-12 w-12 text-[#2d4817] mx-auto mb-3" />
-            <h4 className="font-semibold text-gray-900 mb-2">Upcoming Rounds</h4>
-            <p className="text-sm text-gray-600 mb-4">View complete schedule of the competition</p>
-            <Button className="bg-[#2d4817] hover:bg-[#2a4015] text-white px-6">
-              View Rounds
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border border-[#2d4817] rounded-lg shadow-sm">
-          <CardContent className="p-6 text-center">
-            <Trophy className="h-12 w-12 text-[#2d4817] mx-auto mb-3" />
-            <h4 className="font-semibold text-gray-900 mb-2">Results</h4>
-            <p className="text-sm text-gray-600 mb-4">Check latest results</p>
-            <Button className="bg-[#2d4817] hover:bg-[#2a4015] text-white px-6">
-              View Results
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border border-[#2d4817] rounded-lg shadow-sm">
-          <CardContent className="p-6 text-center">
-            <Megaphone className="h-12 w-12 text-[#2d4817] mx-auto mb-3" />
-            <h4 className="font-semibold text-gray-900 mb-2">Court Hall Allotment</h4>
-            <p className="text-sm text-gray-600 mb-4">Access courtroom links</p>
-            <Button className="bg-[#2d4817] hover:bg-[#2a4015] text-white px-6">
-              View Court Hall
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Competition Announcements */}
       <Card>
