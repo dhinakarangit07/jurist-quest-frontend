@@ -12,6 +12,7 @@ interface Download {
   important: boolean;
   format: string;
   size: string;
+  deadline?: string;
 }
 
 const useDownloads = () => {

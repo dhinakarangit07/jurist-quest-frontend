@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Download, FileText } from "lucide-react";
 import useDownloads from "@/hooks/useDownloads";
 import DownloadCenterSkeleton from "./DownloadCenterSkeleton";
+import { format } from 'date-fns';
 
 const DownloadCenter = () => {
   const { downloads, isLoading, error } = useDownloads();
@@ -38,6 +39,7 @@ const DownloadCenter = () => {
                   <th className="py-3 px-4 text-left font-medium text-gray-900">Format</th>
                   <th className="py-3 px-4 text-left font-medium text-gray-900">Size</th>
                   <th className="py-3 px-4 text-left font-medium text-gray-900">Uploaded On</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-900">Deadline</th>
                   <th className="py-3 px-4 text-left font-medium text-gray-900"></th>
                 </tr>
               </thead>
@@ -57,7 +59,8 @@ const DownloadCenter = () => {
                     </td>
                     <td className="py-4 px-4 text-gray-600">{item.format}</td>
                     <td className="py-4 px-4 text-gray-600">{item.size}</td>
-                    <td className="py-4 px-4 text-gray-600">{item.created_at}</td>
+                    <td className="py-4 px-4 text-gray-600">{format(new Date(item.created_at), 'dd/MM/yyyy')}</td>
+                    <td className="py-4 px-4 text-gray-600">{item.deadline ? format(new Date(item.deadline), 'dd/MM/yyyy HH:mm') : "N/A"}</td>
                     <td className="py-4 px-4">
                       <Button
                         size="sm"

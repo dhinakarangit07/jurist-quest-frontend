@@ -1,42 +1,42 @@
-"use client"
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, User, Eye, ChevronLeft } from "lucide-react"
-import useRounds from "@/hooks/useRounds"
-import RoundDetailsSkeleton from "./RoundDetailsSkeleton"
+"use client";
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Clock, MapPin, User, Eye, ChevronLeft } from "lucide-react";
+import useRounds from "@/hooks/useRounds";
+import RoundDetailsSkeleton from "./RoundDetailsSkeleton";
 
 const RoundDetails = () => {
-  const { rounds, isLoading, error } = useRounds()
-  const [teamData, setTeamData] = useState(null)
-  const [selectedRound, setSelectedRound] = useState(null)
+  const { rounds, isLoading, error } = useRounds();
+  const [teamData, setTeamData] = useState(null);
+  const [selectedRound, setSelectedRound] = useState(null);
 
   useEffect(() => {
-    const storedTeamData = localStorage.getItem("team_data")
+    const storedTeamData = localStorage.getItem("team_data");
     if (storedTeamData) {
-      setTeamData(JSON.parse(storedTeamData))
+      setTeamData(JSON.parse(storedTeamData));
     }
-  }, [])
+  }, []);
 
   if (isLoading) {
-    return <RoundDetailsSkeleton />
+    return <RoundDetailsSkeleton />;
   }
 
   if (error) {
-    return <div className="text-red-500 p-6">Error: {error.message}</div>
+    return <div className="text-red-500 p-6">Error: {error.message}</div>;
   }
 
   if (!rounds || rounds.length === 0) {
-    return <div className="text-gray-500 p-6">No rounds found.</div>
+    return <div className="text-gray-500 p-6">No rounds found.</div>;
   }
 
   const handleViewDetails = (round) => {
-    setSelectedRound(round)
-  }
+    setSelectedRound(round);
+  };
 
   const handleCloseDetails = () => {
-    setSelectedRound(null)
-  }
+    setSelectedRound(null);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8faf7] to-[#e8efe5] py-8 px-4 sm:px-6">
@@ -75,8 +75,8 @@ const RoundDetails = () => {
                           round.status === "Upcoming"
                             ? "bg-blue-50 text-blue-700 border-blue-200"
                             : round.status === "Ongoing"
-                              ? "bg-orange-50 text-orange-700 border-orange-200"
-                              : "bg-green-50 text-green-700 border-green-200"
+                            ? "bg-orange-50 text-orange-700 border-orange-200"
+                            : "bg-green-50 text-green-700 border-green-200"
                         }`}
                       >
                         {round.status}
@@ -130,7 +130,9 @@ const RoundDetails = () => {
                           <p className="font-semibold text-gray-900">{round.team1?.team_id}</p>
                           <p className="text-xs text-gray-500 mt-1">{round.team1?.institution_name}</p>
                         </div>
-                        <div className="px-4 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-700">VS</div>
+                        <div className="px-4 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-700">
+                          VS
+                        </div>
                         <div className="text-center">
                           <p className="font-semibold text-gray-900">{round.team2?.team_id}</p>
                           <p className="text-xs text-gray-500 mt-1">{round.team2?.institution_name}</p>
@@ -154,7 +156,7 @@ const RoundDetails = () => {
         ) : (
           <div className="space-y-6">
             {/* Detailed View */}
-            <Card className="border border-gray-200 rounded-xl shadow-sm overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300 ease-out">
+            <Card className="border border-gray-200 rounded-xl shadow-sm overflow-hidden">
               <CardContent className="p-0">
                 {/* Round Header */}
                 <div className="bg-[#2d4817] text-white p-6">
@@ -166,8 +168,8 @@ const RoundDetails = () => {
                         selectedRound.status === "Upcoming"
                           ? "bg-blue-100/20 text-blue-100 border-blue-100/30"
                           : selectedRound.status === "Ongoing"
-                            ? "bg-orange-100/20 text-orange-100 border-orange-100/30"
-                            : "bg-green-100/20 text-green-100 border-green-100/30"
+                          ? "bg-orange-100/20 text-orange-100 border-orange-100/30"
+                          : "bg-green-100/20 text-green-100 border-green-100/30"
                       }
                     >
                       {selectedRound.status}
@@ -188,22 +190,20 @@ const RoundDetails = () => {
                 {/* VS Battle Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
                   {/* Team 1 - Left Side */}
-                  <div
-                    className={`p-8 ${
-                      selectedRound.team1?.id === teamData?.id
-                        ? "bg-[#2d4817]/5 border-t-2 border-[#2d4817]"
-                        : "bg-white"
-                    }`}
-                  >
+                  <div className={`p-8 ${
+                    selectedRound.team1?.id === teamData?.id
+                      ? "bg-[#2d4817]/5 border-t-2 border-[#2d4817]"
+                      : "bg-white"
+                  }`}>
                     <div className="flex flex-col items-center text-center mb-6">
                       <div className="w-20 h-20 rounded-full bg-[#2d4817]/10 flex items-center justify-center mb-3">
                         <User className="h-8 w-8 text-[#2d4817]" />
                       </div>
-                      <h3
-                        className={`text-xl font-bold ${
-                          selectedRound.team1?.id === teamData?.id ? "text-[#2d4817]" : "text-gray-900"
-                        }`}
-                      >
+                      <h3 className={`text-xl font-bold ${
+                        selectedRound.team1?.id === teamData?.id
+                          ? "text-[#2d4817]"
+                          : "text-gray-900"
+                      }`}>
                         {selectedRound.team1?.team_id}
                       </h3>
                       <p className="text-sm text-gray-500">{selectedRound.team1?.institution_name}</p>
@@ -217,15 +217,13 @@ const RoundDetails = () => {
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 1</p>
                         <p className="text-gray-900">
-                          {selectedRound.team1?.speaker_1_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_1_course_type})</span>
+                          {selectedRound.team1?.speaker_1_name} <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_1_course_type})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 2</p>
                         <p className="text-gray-900">
-                          {selectedRound.team1?.speaker_2_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_2_course_type})</span>
+                          {selectedRound.team1?.speaker_2_name} <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_2_course_type})</span>
                         </p>
                       </div>
                       <div>
@@ -235,17 +233,13 @@ const RoundDetails = () => {
                     </div>
                   </div>
 
-                  {/* VS Center - Adjusted for better spacing */}
+                  {/* VS Center */}
                   <div className="bg-gray-50 flex items-center justify-center p-4 border-y border-gray-200 md:border-y-0 md:border-x">
-                    <div className="flex flex-col items-center gap-4">
-                      {" "}
-                      {/* Changed to flex-col with gap */}
+                    <div className="relative">
                       <div className="w-16 h-16 rounded-full bg-[#2d4817] flex items-center justify-center text-white text-xl font-bold shadow-lg">
                         VS
                       </div>
-                      <div className="text-center text-sm text-gray-500">
-                        {" "}
-                        {/* Removed absolute positioning */}
+                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-center text-sm text-gray-500 mt-2 w-full">
                         <p>Judge:</p>
                         <p className="font-medium text-gray-900">{selectedRound.judge}</p>
                       </div>
@@ -253,22 +247,20 @@ const RoundDetails = () => {
                   </div>
 
                   {/* Team 2 - Right Side */}
-                  <div
-                    className={`p-8 ${
-                      selectedRound.team2?.id === teamData?.id
-                        ? "bg-[#2d4817]/5 border-t-2 border-[#2d4817]"
-                        : "bg-white"
-                    }`}
-                  >
+                  <div className={`p-8 ${
+                    selectedRound.team2?.id === teamData?.id
+                      ? "bg-[#2d4817]/5 border-t-2 border-[#2d4817]"
+                      : "bg-white"
+                  }`}>
                     <div className="flex flex-col items-center text-center mb-6">
                       <div className="w-20 h-20 rounded-full bg-[#2d4817]/10 flex items-center justify-center mb-3">
                         <User className="h-8 w-8 text-[#2d4817]" />
                       </div>
-                      <h3
-                        className={`text-xl font-bold ${
-                          selectedRound.team2?.id === teamData?.id ? "text-[#2d4817]" : "text-gray-900"
-                        }`}
-                      >
+                      <h3 className={`text-xl font-bold ${
+                        selectedRound.team2?.id === teamData?.id
+                          ? "text-[#2d4817]"
+                          : "text-gray-900"
+                      }`}>
                         {selectedRound.team2?.team_id}
                       </h3>
                       <p className="text-sm text-gray-500">{selectedRound.team2?.institution_name}</p>
@@ -282,15 +274,13 @@ const RoundDetails = () => {
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 1</p>
                         <p className="text-gray-900">
-                          {selectedRound.team2?.speaker_1_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_1_course_type})</span>
+                          {selectedRound.team2?.speaker_1_name} <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_1_course_type})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 2</p>
                         <p className="text-gray-900">
-                          {selectedRound.team2?.speaker_2_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_2_course_type})</span>
+                          {selectedRound.team2?.speaker_2_name} <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_2_course_type})</span>
                         </p>
                       </div>
                       <div>
@@ -306,7 +296,7 @@ const RoundDetails = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RoundDetails
+export default RoundDetails;
