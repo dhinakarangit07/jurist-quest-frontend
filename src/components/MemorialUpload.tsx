@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Upload, FileText, CheckCircle, Cloud, Loader2 } from "lucide-react";
 import useMemorials from "@/hooks/useMemorials";
 import MemorialUploadSkeleton from "./MemorialUploadSkeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const MemorialUpload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { memorials, isLoading, error, uploadMemorial } = useMemorials();
   const [isUploading, setIsUploading] = useState(false);
+  const [mootProblem, setMootProblem] = useState("");
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -30,15 +34,17 @@ const MemorialUpload = () => {
   };
 
   const handleUpload = async () => {
-    if (selectedFile) {
+    if (selectedFile && mootProblem) {
       setIsUploading(true);
+      setUploadError(null);
       try {
-        await uploadMemorial(selectedFile);
+        await uploadMemorial(selectedFile, mootProblem);
         setSelectedFile(null);
+        setMootProblem("");
         const fileInput = document.getElementById('memorial-upload') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
-      } catch (uploadError) {
-        // Handle upload error display
+      } catch (uploadError: any) {
+        setUploadError(uploadError.message);
       } finally {
         setIsUploading(false);
       }
@@ -57,6 +63,8 @@ const MemorialUpload = () => {
     );
   }
 
+  const submittedProblems = memorials.map(m => m.moot_problem);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -67,7 +75,17 @@ const MemorialUpload = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div>
+          <div className="space-y-4">
+            <Select onValueChange={setMootProblem} value={mootProblem}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Moot Problem" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="problem1" disabled={submittedProblems.includes('problem1')}>MOOT PROBLEM - I</SelectItem>
+                <SelectItem value="problem2" disabled={submittedProblems.includes('problem2')}>MOOT PROBLEM - II</SelectItem>
+              </SelectContent>
+            </Select>
+
             <div
               className="border-2 border-dashed border-[#2d4817] rounded-lg p-8 text-center hover:border-[#2a4015] transition-colors"
               onDrop={handleDrop}
@@ -99,10 +117,16 @@ const MemorialUpload = () => {
                   <p className="text-sm text-blue-600 mt-1">
                     Size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                   </p>
+                  {mootProblem && (
+                    <p className="text-sm text-blue-600 mt-1">
+                      Moot Problem: {mootProblem === 'problem1' ? 'MOOT PROBLEM - I' : 'MOOT PROBLEM - II'}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
-            <Button onClick={handleUpload} disabled={!selectedFile || isUploading} className="w-full mt-4 bg-[#2d4817] hover:bg-[#2a4015] text-white">
+            {uploadError && <p className="text-red-500 text-sm">{uploadError}</p>}
+            <Button onClick={handleUpload} disabled={!selectedFile || isUploading || !mootProblem} className="w-full mt-4 bg-[#2d4817] hover:bg-[#2a4015] text-white">
               {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
               Upload
             </Button>
@@ -133,7 +157,7 @@ const MemorialUpload = () => {
                     <FileText className="h-5 w-5 text-gray-600" />
                     <div>
                       <p className="font-medium text-gray-900">{upload.file.split('/').pop()}</p>
-                      <p className="text-sm text-gray-500">{new Date(upload.created_at).toLocaleString()}</p>
+                      <p className="text-sm text-gray-500">{upload.moot_problem_display} - {new Date(upload.created_at).toLocaleString()}</p>
                     </div>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />
