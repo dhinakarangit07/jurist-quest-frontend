@@ -12,12 +12,16 @@ const MemorialUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [mootProblem, setMootProblem] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
-
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl(null);
     }
   };
 
@@ -26,6 +30,8 @@ const MemorialUpload = () => {
     const file = event.dataTransfer.files?.[0];
     if (file && file.type === "application/pdf") {
       setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     }
   };
 
@@ -41,6 +47,7 @@ const MemorialUpload = () => {
         await uploadMemorial(selectedFile, mootProblem);
         setSelectedFile(null);
         setMootProblem("");
+        setPreviewUrl(null);
         const fileInput = document.getElementById('memorial-upload') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
       } catch (uploadError: any) {
@@ -121,6 +128,15 @@ const MemorialUpload = () => {
                     <p className="text-sm text-blue-600 mt-1">
                       Moot Problem: {mootProblem === 'problem1' ? 'MOOT PROBLEM - I' : 'MOOT PROBLEM - II'}
                     </p>
+                  )}
+                  {previewUrl && (
+                    <div className="mt-4">
+                      <iframe
+                        src={previewUrl}
+                        className="w-full h-96 rounded-lg"
+                        title="PDF Preview"
+                      />
+                    </div>
                   )}
                 </div>
               )}
