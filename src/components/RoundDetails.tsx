@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, User, Eye, ChevronLeft } from "lucide-react"
+import { Calendar, MapPin, User, Eye, ChevronLeft, Video } from "lucide-react"
 import useRounds from "@/hooks/useRounds"
 import RoundDetailsSkeleton from "./RoundDetailsSkeleton"
 
@@ -104,11 +104,17 @@ const RoundDetails = () => {
                       </div>
                       <div className="flex items-start gap-3">
                         <div className="p-2 bg-[#2d4817]/10 rounded-lg">
-                          <MapPin className="h-5 w-5 text-[#2d4817]" />
+                          {round.round_type === 'online' ? <Video className="h-5 w-5 text-[#2d4817]" /> : <MapPin className="h-5 w-5 text-[#2d4817]" />}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-500">Venue</p>
-                          <p className="text-gray-900">{round.venue}</p>
+                          <p className="text-sm font-medium text-gray-500">{round.round_type === 'online' ? 'Meet Link' : 'Venue'}</p>
+                          {round.round_type === 'online' ? (
+                            <a href={round.meet_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              Join Meet
+                            </a>
+                          ) : (
+                            <p className="text-gray-900">{round.venue}</p>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
@@ -179,8 +185,8 @@ const RoundDetails = () => {
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-white/90">
-                      <MapPin className="h-4 w-4" />
-                      <span>{selectedRound.venue}</span>
+                      {selectedRound.round_type === 'online' ? <Video className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
+                      <span>{selectedRound.round_type === 'online' ? <a href={selectedRound.meet_url} target="_blank" rel="noopener noreferrer" className="hover:underline">Join Meet</a> : selectedRound.venue}</span>
                     </div>
                   </div>
                 </div>
