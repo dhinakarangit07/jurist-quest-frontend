@@ -169,7 +169,7 @@ const ClarificationPanel = () => {
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-500">
-                        Submitted: {new Date(clarification.submittedAt).toLocaleString()}
+                        Submitted: {new Date(clarification.created_at).toLocaleString()}
                       </p>
                     </div>
                     <ChevronDown
@@ -185,7 +185,7 @@ const ClarificationPanel = () => {
                           <p className="font-semibold text-gray-800">Response:</p>
                           <div className="prose max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: clarification.response.replace(/src="\//g, `src="${import.meta.env.VITE_API_URL}/`) }} />
                           <p className="text-xs text-gray-400 mt-2">
-                            Responded: {new Date(clarification.respondedAt).toLocaleString()}
+                            Responded: {new Date(clarification.updated_at).toLocaleString()}
                           </p>
                         </>
                       )}
