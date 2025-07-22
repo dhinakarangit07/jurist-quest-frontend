@@ -17,7 +17,10 @@ const OverviewSkeleton = () => {
                 <Skeleton className="h-7 w-1/3 mb-3" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <div
+                      key={i}
+                      className="bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+                    >
                       <div className="flex items-center gap-3 mb-2">
                         <Skeleton className="w-10 h-10 rounded" />
                         <div className="w-full">
@@ -45,7 +48,7 @@ const OverviewSkeleton = () => {
           </div>
         </CardContent>
       </Card>
-      
+
       {/* Upcoming Deadline Alert Skeleton */}
       <Card className="border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 shadow-sm">
         <CardContent className="p-4">
