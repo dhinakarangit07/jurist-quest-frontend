@@ -7,8 +7,8 @@ interface Clarification {
   question: string;
   response: string;
   status: string;
-  submittedAt: string;
-  respondedAt: string | null;
+  created_at: string;
+  updated_at: string | null;
 }
 
 interface ApiError {
