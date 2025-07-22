@@ -90,72 +90,18 @@ const Overview = ({ overviewData }: OverviewProps) => {
     <div className="space-y-6 p-4 md:p-6">
       <Card className="bg-[#2d4817] text-white border-0 shadow-lg">
         <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          {/* Top row: Welcome Back! and Registration Countdown */}
+          <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-6">
             <div className="flex-1">
               <h1 className="text-3xl font-bold mb-4">Welcome Back!</h1>
               <p className="text-green-100 mb-6">
                 Welcome to your JuristQuest 2025 Participant Dashboard. Track your team’s progress, view important deadlines, and stay updated throughout the competition.
               </p>
-
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-3">Your Competition Progress</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-[#2d4817] rounded flex items-center justify-center">
-                        <Users className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-gray-900">Total Teams</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="h-2 w-full bg-gray-200 rounded-full">
-                        <div className="h-full w-[80%] bg-[#2d4817] rounded-full"></div>
-                      </div>
-                      <div className="text-xs text-gray-500">{competition_progress.total_teams} Teams</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-[#2d4817] rounded flex items-center justify-center">
-                        <Users className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-gray-900">Qualified for Round 2</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="h-2 w-full bg-gray-200 rounded-full">
-                        <div className="h-full w-[50%] bg-[#2d4817] rounded-full"></div>
-                      </div>
-                      <div className="text-xs text-gray-500">{competition_progress.qualified_for_round_2} Teams</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-[#2d4817] rounded flex items-center justify-center">
-                        <Users className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-gray-900">Rounds Completed</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="h-2 w-full bg-gray-200 rounded-full">
-                        <div className="h-full w-[75%] bg-[#2d4817] rounded-full"></div>
-                      </div>
-                      <div className="text-xs text-gray-500">{competition_progress.rounds_completed} Rounds</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
+            {/* Registration Ends In Block */}
             <div className="bg-white text-gray-900 border border-[#2d4817] rounded-lg p-4 text-center flex-shrink-0 w-full md:w-auto">
-              <p className="text-sm text-gray-900 mb-1">Registration ends in</p>
+              <p className="text-sm text-gray-900 mb-1">Competition starts in</p>
               <div className="bg-[#2d4817] text-white rounded-md p-2 mb-2 inline-block min-w-[80px]">
                 <div className="text-4xl font-bold flex justify-center gap-2">
                   <span>{timeLeft.days.toString().padStart(2, "0")}D</span>
@@ -164,7 +110,64 @@ const Overview = ({ overviewData }: OverviewProps) => {
                   <span>{timeLeft.seconds.toString().padStart(2, "0")}S</span>
                 </div>
               </div>
-              <p className="text-sm text-gray-900">until 15 August 2025</p>
+              <p className="text-sm text-gray-900">at 16 August 2025</p>
+            </div>
+          </div>
+
+          {/* Second row: Your Competition Progress cards */}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold mb-3 text-white">Your Competition Progress</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-[#2d4817] rounded flex items-center justify-center">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-gray-900">Total Teams</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="h-2 w-full bg-gray-200 rounded-full">
+                    <div className="h-full w-[80%] bg-[#2d4817] rounded-full"></div>
+                  </div>
+                  <div className="text-xs text-gray-500">{competition_progress.total_teams} Teams</div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-[#2d4817] rounded flex items-center justify-center">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-gray-900">Qualified for Round 2</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="h-2 w-full bg-gray-200 rounded-full">
+                    <div className="h-full w-[50%] bg-[#2d4817] rounded-full"></div>
+                  </div>
+                  <div className="text-xs text-gray-500">{competition_progress.qualified_for_round_2} Teams</div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-[#2d4817] rounded flex items-center justify-center">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-gray-900">Rounds Completed</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="h-2 w-full bg-gray-200 rounded-full">
+                    <div className="h-full w-[75%] bg-[#2d4817] rounded-full"></div>
+                  </div>
+                  <div className="text-xs text-gray-500">{competition_progress.rounds_completed} Rounds</div>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
