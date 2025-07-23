@@ -10,7 +10,11 @@ const Index = () => {
 
   const handleLogin = (data: any) => {
     setIsLoggedIn(true)
-    navigate("/member-dashboard")
+    if (data.user_type === "jurimember") {
+      navigate("/juri-dashboard")
+    } else {
+      navigate("/member-dashboard")
+    }
   }
 
   if (!isLoggedIn) {

@@ -41,19 +41,23 @@ const Index = ({ onLogin }: LoginFormProps) => {
         username: username,
         password: password,
       });
-      const { access, refresh } = response.data;
+      const { access, refresh, user_type } = response.data;
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
-      
-      const userDetailsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/team/details/`, {
-        headers: {
-          Authorization: `Bearer ${access}`
-        }
-      });
 
-      localStorage.setItem('team_data', JSON.stringify(userDetailsResponse.data));
+      if (user_type === 'jurimember') {
+        onLogin({ user_type });
+      } else {
+        const userDetailsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/team/details/`, {
+          headers: {
+            Authorization: `Bearer ${access}`
+          }
+        });
 
-      onLogin(userDetailsResponse.data);
+        localStorage.setItem('team_data', JSON.stringify(userDetailsResponse.data));
+
+        onLogin({ ...userDetailsResponse.data, user_type });
+      }
     } catch (error) {
       toast({
         title: "Authentication Failed",
