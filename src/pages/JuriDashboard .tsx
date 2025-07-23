@@ -1,7 +1,4 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import axios from "axios";
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -22,62 +19,45 @@ import {
   Menu,
 } from "lucide-react"
 
-import Overview from "@/components/JuriDashboard/Overview";
+import Overview from "@/components/JuriDashboard/Overview"
 import MemorialUpload from "@/components/JuriDashboard/MemorialUpload"
 import ClarificationPanel from "@/components/JuriDashboard/ClarificationPanel"
 import AnnouncementFeed from "@/components/JuriDashboard/AnnouncementFeed"
 import DownloadCenter from "@/components/JuriDashboard/DownloadCenter"
 import RoundDetails from "@/components/JuriDashboard/RoundDetails"
-
-import Sidebar from "@/components/JuriDashboard/sidebar";
-
+import Sidebar from "@/components/JuriDashboard/sidebar"
 import ContactPage from "@/components/JuriDashboard/ContactPage"
-import DashboardSkeleton from "./DashboardSkeleton";
+import DashboardSkeleton from "./DashboardSkeleton"
+
+// Mock data for demo purposes
+const mockOverviewData = {
+  team_details: {
+    team_code: "TC123",
+    team_name: "Justice League",
+    university: "Example University",
+    participants: [
+      { name: "Alice Smith" },
+      { name: "Bob Johnson" },
+      { name: "Carol Williams" },
+    ],
+  },
+  competition_progress: {
+    total_teams: 50,
+    qualified_for_round_2: 25,
+    rounds_completed: 1,
+  },
+  upcoming_deadline: {
+    title: "Memorial Submission",
+    deadline: "2025-08-10T23:59:59",
+  },
+}
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [overviewData, setOverviewData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-
-  useEffect(() => {
-    const fetchOverviewData = async () => {
-      try {
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-          // Handle case where user is not logged in
-          setError("Not authenticated");
-          setLoading(false);
-          return;
-        }
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/overview/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setOverviewData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOverviewData();
-  }, []);
-
+  const [overviewData] = useState(mockOverviewData)
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
-  }
-
-  if (loading) {
-    return <DashboardSkeleton />;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
   }
 
   return (
@@ -101,9 +81,6 @@ const Dashboard = () => {
           </div>
 
           <div className="container mx-auto px-4 py-6">
-            
-            
-
             <TabsContent value="overview">
               <Overview overviewData={overviewData} />
             </TabsContent>
