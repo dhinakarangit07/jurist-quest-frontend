@@ -85,7 +85,7 @@ const Overview = () => {
             <div className="flex-1">
               <h1 className="text-3xl font-bold mb-4">Welcome Back Juri Member!</h1>
               <p className="text-green-100 mb-6">
-                Welcome to your JuristQuest 2025 Participant Dashboard. Track your team's progress, view important deadlines, and stay updated throughout the competition.
+                Welcome to your JuristQuest 2025 Juri Dashboard. Evaluate the competition with your choosen team.
               </p>
             </div>
 
