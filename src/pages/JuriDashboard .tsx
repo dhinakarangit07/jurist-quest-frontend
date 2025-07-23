@@ -21,12 +21,10 @@ import {
 
 import Overview from "@/components/JuriDashboard/Overview"
 import MemorialUpload from "@/components/JuriDashboard/MemorialUpload"
-import ClarificationPanel from "@/components/JuriDashboard/ClarificationPanel"
 import AnnouncementFeed from "@/components/JuriDashboard/AnnouncementFeed"
 import DownloadCenter from "@/components/JuriDashboard/DownloadCenter"
 import RoundDetails from "@/components/JuriDashboard/RoundDetails"
 import Sidebar from "@/components/JuriDashboard/sidebar"
-import ContactPage from "@/components/JuriDashboard/ContactPage"
 import DashboardSkeleton from "./DashboardSkeleton"
 
 // Mock data for demo purposes
@@ -85,19 +83,15 @@ const Dashboard = () => {
               <Overview overviewData={overviewData} />
             </TabsContent>
 
-            <TabsContent value="downloads">
+            <TabsContent value="teams">
               <DownloadCenter />
             </TabsContent>
 
-            <TabsContent value="memorial">
+            <TabsContent value="marks">
               <MemorialUpload teamCode={overviewData?.team_details?.team_code} />
             </TabsContent>
 
-            <TabsContent value="clarifications">
-              <ClarificationPanel teamCode={overviewData?.team_details?.team_code} />
-            </TabsContent>
-
-            <TabsContent value="announcements">
+            <TabsContent value="announcement">
               <AnnouncementFeed />
             </TabsContent>
 
@@ -105,9 +99,6 @@ const Dashboard = () => {
               <RoundDetails />
             </TabsContent>
 
-            <TabsContent value="support">
-              <ContactPage />
-            </TabsContent>
           </div>
         </main>
       </div>

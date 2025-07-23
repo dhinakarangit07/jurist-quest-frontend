@@ -49,84 +49,51 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
 
           {/* Regular Menu Items */}
           <TabsTrigger 
-            value="downloads" 
+            value="teams" 
             className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <Download className="h-5 w-5" />
-            <span>Download</span>
+            <span>Teams</span>
           </TabsTrigger>
 
           <TabsTrigger 
-            value="memorial" 
+            value="marks" 
             className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <Upload className="h-5 w-5" />
-            <span>Memorial Submission</span>
+            <span>Marks</span>
           </TabsTrigger>
 
           <TabsTrigger 
-            value="clarifications" 
+            value="round-details" 
             className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <MessageSquare className="h-5 w-5" />
-            <span>Clarifications</span>
+            <span>Round Details</span>
           </TabsTrigger>
 
-          {/* Announcements Dropdown */}
-          <div className="w-full">
-            <Button
-              variant="ghost"
-              className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-between gap-3 px-4 font-normal"
-              onClick={() => setAnnouncementsOpen(!isAnnouncementsOpen)}
-            >
-              <div className="flex items-center gap-3">
-                <Bell className="h-5 w-5" />
-                <span>Announcements</span>
-              </div>
-              <ChevronDown
-                className={`h-5 w-5 transition-transform duration-200 ${
-                  isAnnouncementsOpen ? "rotate-180" : ""
-                }`}
-              />
-            </Button>
-            {isAnnouncementsOpen && (
-              <div className="pl-8 pt-2 space-y-2">
-                <TabsTrigger
-                  value="announcements"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
-                >
-                  <span>Updates</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="round-details"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
-                >
-                  <span>Round Details</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="support"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
-                >
-                  <span>Contact</span>
-                </TabsTrigger>
-              </div>
-            )}
-          </div>
+          <TabsTrigger 
+            value="announcement" 
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
+          >
+            <Bell className="h-5 w-5" />
+            <span>Announcement</span>
+          </TabsTrigger>
         </TabsList>
       </nav>
 
       {/* Logout Button */}
       <div className="p-4 border-t border-gray-100">
         <Button 
-  variant="ghost" 
-  className="w-full bg-[#2d4817] text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 hover:bg-[#2d4817] hover:text-white"
-  onClick={() => {
-    window.location.href = "/"
-  }}
->
-  <LogOut className="h-5 w-5" />
-  <span>Logout</span>
-</Button>
+          variant="ghost" 
+          className="w-full bg-[#2d4817] text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 hover:bg-[#2d4817] hover:text-white"
+            onClick={() => {
+              window.location.href = "/"
+          }}
+          >
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
+        </Button>
 
       </div>
     </aside>
