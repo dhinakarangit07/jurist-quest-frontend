@@ -21,17 +21,17 @@ import {
   AlertTriangle,
   Menu,
 } from "lucide-react"
-import CountdownTimer from "@/components/CountdownTimer"
-import Overview from "./Overview";
-import MemorialUpload from "@/components/MemorialUpload"
-import ClarificationPanel from "@/components/ClarificationPanel"
-import AnnouncementFeed from "@/components/AnnouncementFeed"
-import DownloadCenter from "@/components/DownloadCenter"
-import RoundDetails from "@/components/RoundDetails"
 
-import Sidebar from "@/components/sidebar";
+import Overview from "@/components/TeamDashboard/Overview";
+import MemorialUpload from "@/components/TeamDashboard/MemorialUpload"
+import ClarificationPanel from "@/components/TeamDashboard/ClarificationPanel"
+import AnnouncementFeed from "@/components/TeamDashboard/AnnouncementFeed"
+import DownloadCenter from "@/components/TeamDashboard/DownloadCenter"
+import RoundDetails from "@/components/TeamDashboard/RoundDetails"
 
-import ContactPage from "@/components/ContactPage"
+import Sidebar from "@/components/TeamDashboard/sidebar";
+
+import ContactPage from "@/components/TeamDashboard/ContactPage"
 import DashboardSkeleton from "./DashboardSkeleton";
 
 const Dashboard = () => {

@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Calendar, Megaphone, Trophy, ChevronDown } from "lucide-react";
 import useAnnouncements from "@/hooks/useAnnouncements";
-import AnnouncementFeedSkeleton from "./AnnouncementFeedSkeleton";
+import AnnouncementFeedSkeleton from "@/components/skeleton/TeamDashboard/AnnouncementFeedSkeleton";
 
 const AnnouncementFeed = () => {
   const { announcements, isLoading, error } = useAnnouncements();

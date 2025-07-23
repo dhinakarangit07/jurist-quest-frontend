@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, School, AlertCircle } from "lucide-react"
 import { useEffect, useState } from "react"
-import OverviewSkeleton from "./OverviewSkeleton"
+import OverviewSkeleton from "@/components/skeleton/TeamDashboard/OverviewSkeleton"
 
 interface Participant {
   name: string

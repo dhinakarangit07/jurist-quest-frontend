@@ -1,4 +1,4 @@
-import OverviewSkeleton from "./OverviewSkeleton"
+import OverviewSkeleton from "../components/skeleton/TeamDashboard/OverviewSkeleton"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const SidebarSkeleton = () => {

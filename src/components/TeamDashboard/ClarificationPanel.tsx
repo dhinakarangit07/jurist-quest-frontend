@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Send, Loader2, ChevronDown, FileText } from "lucide-react";
 import useClarifications from "@/hooks/useClarifications";
-import ClarificationPanelSkeleton from "./ClarificationPanelSkeleton";
+import ClarificationPanelSkeleton from "@/components/skeleton/TeamDashboard/ClarificationPanelSkeleton";
 
 const ClarificationPanel = () => {
   const [subject, setSubject] = useState("");

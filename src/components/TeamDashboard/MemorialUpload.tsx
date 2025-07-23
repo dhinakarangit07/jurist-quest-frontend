@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, CheckCircle, Cloud, Loader2 } from "lucide-react";
 import useMemorials from "@/hooks/useMemorials";
-import MemorialUploadSkeleton from "./MemorialUploadSkeleton";
+import MemorialUploadSkeleton from "@/components/skeleton/TeamDashboard/MemorialUploadSkeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const MemorialUpload = () => {

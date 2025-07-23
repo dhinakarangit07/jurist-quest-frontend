@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, FileText } from "lucide-react";
 import useDownloads from "@/hooks/useDownloads";
-import DownloadCenterSkeleton from "./DownloadCenterSkeleton";
+import DownloadCenterSkeleton from "@/components/skeleton/TeamDashboard/DownloadCenterSkeleton";
 import { format } from 'date-fns';
 
 const DownloadCenter = () => {

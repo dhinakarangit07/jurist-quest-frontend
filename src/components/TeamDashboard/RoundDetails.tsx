@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, MapPin, User, Eye, ChevronLeft, Video } from "lucide-react"
 import useRounds from "@/hooks/useRounds"
-import RoundDetailsSkeleton from "./RoundDetailsSkeleton"
+import RoundDetailsSkeleton from "@/components/skeleton/TeamDashboard/RoundDetailsSkeleton"
 
 const RoundDetails = () => {
   const { rounds, isLoading, error } = useRounds()

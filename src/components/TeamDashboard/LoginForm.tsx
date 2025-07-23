@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import LoadingScreen from "@/components/LoadingScreen"
+import LoadingScreen from "@/components/TeamDashboard/LoadingScreen"
 import Logo from "@/assets/Logo.png"
 import axios from "axios"
 
