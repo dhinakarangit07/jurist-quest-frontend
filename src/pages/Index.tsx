@@ -10,7 +10,7 @@ const Index = () => {
 
   const handleLogin = (data: any) => {
     setIsLoggedIn(true)
-    navigate("/dashboard")
+    navigate("/member-dashboard")
   }
 
   if (!isLoggedIn) {
