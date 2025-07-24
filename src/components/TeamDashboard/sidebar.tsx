@@ -9,6 +9,8 @@ import {
   LayoutDashboard,
   LogOut,
   ChevronDown,
+  UserRound,
+  PhoneCallIcon,
 } from "lucide-react"
 import { TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -39,6 +41,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
       <nav className="flex-1 p-4">
         <TabsList className="grid grid-cols-1 h-auto bg-transparent space-y-2 p-0">
           {/* Dashboard - Featured Button */}
+          <TabsTrigger
+                  value="announcements"
+                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
+                >
+                  <Bell className="h-5 w-5" />
+                  <span>Announcement</span>
+                </TabsTrigger>
           <TabsTrigger 
             value="overview" 
             className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white font-medium"
@@ -46,7 +55,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
             <LayoutDashboard className="h-5 w-5" />
             <span>Dashboard</span>
           </TabsTrigger>
-
+          <TabsTrigger
+                  value="round-details"
+                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
+                >
+                  <UserRound className="h-5 w-5"/>
+                  <span>Round Details</span>
+                </TabsTrigger>
           {/* Regular Menu Items */}
           <TabsTrigger 
             value="downloads" 
@@ -72,46 +87,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
             <span>Clarifications</span>
           </TabsTrigger>
 
-          {/* Announcements Dropdown */}
-          <div className="w-full">
-            <Button
-              variant="ghost"
-              className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-between gap-3 px-4 font-normal"
-              onClick={() => setAnnouncementsOpen(!isAnnouncementsOpen)}
-            >
-              <div className="flex items-center gap-3">
-                <Bell className="h-5 w-5" />
-                <span>Announcements</span>
-              </div>
-              <ChevronDown
-                className={`h-5 w-5 transition-transform duration-200 ${
-                  isAnnouncementsOpen ? "rotate-180" : ""
-                }`}
-              />
-            </Button>
-            {isAnnouncementsOpen && (
-              <div className="pl-8 pt-2 space-y-2">
-                <TabsTrigger
-                  value="announcements"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
-                >
-                  <span>Updates</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="round-details"
-                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
-                >
-                  <span>Round Details</span>
-                </TabsTrigger>
-                <TabsTrigger
+          <TabsTrigger
                   value="support"
                   className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
                 >
+                  <PhoneCallIcon className="h-5 w-5" />
                   <span>Contact</span>
                 </TabsTrigger>
-              </div>
-            )}
-          </div>
         </TabsList>
       </nav>
 
