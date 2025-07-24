@@ -22,6 +22,7 @@ import {
 import Overview from "@/components/JuriDashboard/Overview"
 import MemorialUpload from "@/components/JuriDashboard/Marks"
 import AnnouncementFeed from "@/components/JuriDashboard/AnnouncementFeed"
+import Team from "@/components/JuriDashboard/Team"
 import Mark from "@/components/JuriDashboard/Marks"
 import RoundDetails from "@/components/JuriDashboard/RoundDetails"
 import Sidebar from "@/components/JuriDashboard/sidebar"
@@ -113,6 +114,10 @@ const Dashboard = () => {
 
             <TabsContent value="announcement">
               <AnnouncementFeed />
+            </TabsContent>
+
+            <TabsContent value="team">
+              <Team/>
             </TabsContent>
 
             <TabsContent value="round-details">
