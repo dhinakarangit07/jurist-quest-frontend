@@ -89,7 +89,7 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
                 onClick={(e) => {
                   e.stopPropagation()
                   // Add functionality for Memorial button
-                  console.log("Memorial button clicked for", teamCode)
+                  window.location.href = `/juri-dashboard/memorial?teamCode=${teamCode}`
                 }}
                 className="bg-green-900 hover:bg-green-800 text-white"
               >
