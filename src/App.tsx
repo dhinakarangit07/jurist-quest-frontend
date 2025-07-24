@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import MemberDashboard from "./pages/MemberDashboard";
 import JuriDashboard from "./pages/JuriDashboard "
+import Marks from "@/components/JuriDashboard/Marks"
 
 import NotFound from "./pages/NotFound";
 
@@ -20,9 +21,15 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/member-dashboard" element={<MemberDashboard />} />
-          <Route path="/juri-dashboard" element={<JuriDashboard />} />
+          <Route path="/juri-dashboard"  >
+            <Route index element={<JuriDashboard/>} />
+            <Route path="marks" element={<Marks />} />
+          </Route>
+          
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
+          
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
