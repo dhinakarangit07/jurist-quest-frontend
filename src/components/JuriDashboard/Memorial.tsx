@@ -24,7 +24,7 @@ const Memorial = () => {
 
   const handleGoBack = () => {
     // Navigate to /juri-dashboard without using Next.js Link
-    window.location.href = "/juri-dashboard"
+    window.location.href = "/juri-dashboard?view=team"
   }
 
   // Add a dummy memorial for demonstration if no actual data is loaded
