@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FileText, Eye, Download, XCircle } from "lucide-react"
+import { FileText, Eye, Download, XCircle, ArrowLeft } from "lucide-react"
 import useMemorials from "@/hooks/useMemorials" // Assuming this hook is available and provides document URLs
 import MemorialUploadSkeleton from "@/components/skeleton/TeamDashboard/MemorialUploadSkeleton" // Reusing the skeleton for consistency
 
@@ -20,6 +20,11 @@ const Memorial = () => {
   const handleClosePreview = () => {
     setPreviewUrl(null)
     setPreviewTitle(null)
+  }
+
+  const handleGoBack = () => {
+    // Navigate to /juri-dashboard without using Next.js Link
+    window.location.href = "/juri-dashboard"
   }
 
   // Add a dummy memorial for demonstration if no actual data is loaded
@@ -50,6 +55,19 @@ const Memorial = () => {
 
   return (
     <div className="container mx-auto py-8 px-4 md:px-6 lg:px-8">
+      {/* Back button added here */}
+      <div className="mb-6 flex items-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-gray-600 hover:text-gray-900"
+          onClick={handleGoBack} // Use onClick for navigation
+        >
+          <ArrowLeft className="h-6 w-6" />
+          <span className="sr-only">Back to Dashboard</span>
+        </Button>
+      </div>
+
       <Card className="shadow-lg rounded-xl border border-gray-200">
         <CardHeader className="pb-6 border-b border-gray-200">
           <CardTitle className="text-3xl font-bold text-gray-900">Submitted Memorials</CardTitle>
