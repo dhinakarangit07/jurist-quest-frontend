@@ -39,6 +39,15 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <TabsList className="grid grid-cols-1 h-auto bg-transparent space-y-2 p-0">
+
+            {/* Regular Menu Items */}
+          <TabsTrigger 
+            value="announcement" 
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
+          >
+            <Bell className="h-5 w-5" />
+            <span>Announcement</span>
+          </TabsTrigger>
           {/* Dashboard - Featured Button */}
           <TabsTrigger 
             value="overview" 
@@ -48,21 +57,14 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
             <span>Dashboard</span>
           </TabsTrigger>
 
-          {/* Regular Menu Items */}
-          <TabsTrigger 
-            value="announcement" 
-            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
-          >
-            <Bell className="h-5 w-5" />
-            <span>Announcement</span>
-          </TabsTrigger>
+        
 
           <TabsTrigger 
             value="team" 
             className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
           >
             <User className="h-5 w-5" />
-            <span>Team</span>
+            <span>Teams</span>
           </TabsTrigger>
 
         </TabsList>
