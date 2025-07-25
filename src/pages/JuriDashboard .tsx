@@ -20,19 +20,15 @@ import {
 } from "lucide-react"
 
 import Overview from "@/components/JuriDashboard/Overview"
-import MemorialUpload from "@/components/JuriDashboard/Marks"
+
 import AnnouncementFeed from "@/components/JuriDashboard/AnnouncementFeed"
 import Team from "@/components/JuriDashboard/Team"
 import Mark from "@/components/JuriDashboard/Marks"
 import Memorial from "@/components/JuriDashboard/Memorial"
 import Round from "@/components/JuriDashboard/Round"
-import RoundDetails from "@/components/JuriDashboard/RoundDetails"
+
 import Sidebar from "@/components/JuriDashboard/sidebar"
-import AllTeams from "@/components/JuriDashboard/AllTeams"
-import QuarterFinal from "@/components/JuriDashboard/QuarterFinal"
-import Prelims from "@/components/JuriDashboard/Prelims"
-import SemiFinal from "@/components/JuriDashboard/SemiFinal"
-import Final from "@/components/JuriDashboard/Final"
+
 import DashboardSkeleton from "./DashboardSkeleton"
 
 // Mock data for demo purposes
@@ -91,23 +87,7 @@ const Dashboard = () => {
               <Overview overviewData={overviewData} />
             </TabsContent>
 
-            <TabsContent value="all-teams">
-              <AllTeams />
-            </TabsContent>
-
-            <TabsContent value="quarter-final">
-              <QuarterFinal />
-            </TabsContent>
-            <TabsContent value="teams">
-              <Prelims />
-            </TabsContent>
-            <TabsContent value="semi-final">
-              <SemiFinal />
-            </TabsContent>
-            <TabsContent value="final">
-              <Final />
-            </TabsContent>
-
+            
             
 
             <TabsContent value="marks">
@@ -127,10 +107,6 @@ const Dashboard = () => {
             </TabsContent>
             <TabsContent value="round">
               <Round/>
-            </TabsContent>
-
-            <TabsContent value="round-details">
-              <RoundDetails />
             </TabsContent>
 
           </div>
