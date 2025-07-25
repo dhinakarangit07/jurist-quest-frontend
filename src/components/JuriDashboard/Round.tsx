@@ -171,7 +171,7 @@ const JudgeRound = () => {
   const [selectedRound, setSelectedRound] = useState(null)
 
   const handleGoBackToDashboard = () => {
-    window.location.href = "/juri-dashboard" // Navigate to /dashboard
+    window.location.href = "/juri-dashboard?view=team" // Navigate to /dashboard
   }
 
   if (isLoading) {
