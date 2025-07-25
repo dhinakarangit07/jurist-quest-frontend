@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import MemberDashboard from "./pages/MemberDashboard";
-import JuriDashboard from "./pages/JuriDashboard "
+import JuriDashboard from "./pages/JuriDashboard";
 import Marks from "@/components/JuriDashboard/Marks"
 import Memorial from "@/components/JuriDashboard/Memorial"
 import Round from "@/components/JuriDashboard/Round"
