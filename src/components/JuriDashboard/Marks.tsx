@@ -191,7 +191,7 @@ const MarksEntryPage = () => {
   }
 
   const handleGoBack = () => {
-      window.history.back() 
+      window.location.href = "/juri-dashboard?view=team"
     
   }
 
