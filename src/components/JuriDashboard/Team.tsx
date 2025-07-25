@@ -99,7 +99,7 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
                 onClick={(e) => {
                   e.stopPropagation()
                   // Add functionality for Rounds button
-                  console.log("Rounds button clicked for", teamCode)
+                  window.location.href = `/juri-dashboard/round?teamCode=${teamCode}`
                 }}
                 className="bg-green-900 hover:bg-green-800 text-white"
               >
