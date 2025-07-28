@@ -1,14 +1,37 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, CheckCircle, Cloud, Loader2 } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  CheckCircle,
+  Cloud,
+  Loader2,
+} from "lucide-react";
 import useMemorials from "@/hooks/useMemorials";
 import MemorialUploadSkeleton from "@/components/skeleton/TeamDashboard/MemorialUploadSkeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const MemorialUpload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { memorials, isLoading, error, uploadMemorial } = useMemorials();
+  const {
+    memorials,
+    isLoading,
+    error,
+    uploadMemorial,
+  } = useMemorials();
   const [isUploading, setIsUploading] = useState(false);
   const [mootProblem, setMootProblem] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -48,8 +71,8 @@ const MemorialUpload = () => {
         setSelectedFile(null);
         setMootProblem("");
         setPreviewUrl(null);
-        const fileInput = document.getElementById('memorial-upload') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
+        const fileInput = document.getElementById("memorial-upload") as HTMLInputElement;
+        if (fileInput) fileInput.value = "";
       } catch (uploadError: any) {
         setUploadError(uploadError.message);
       } finally {
@@ -70,10 +93,11 @@ const MemorialUpload = () => {
     );
   }
 
-  const submittedProblems = memorials.map(m => m.moot_problem);
+  const submittedProblems = memorials.map((m) => m.moot_problem);
 
   return (
     <div className="space-y-6">
+      {/* Upload Form */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-xl text-gray-900">Submit Memorial</CardTitle>
@@ -88,8 +112,30 @@ const MemorialUpload = () => {
                 <SelectValue placeholder="Select Moot Problem" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="problem1" disabled={submittedProblems.includes('problem1')}>MOOT PROBLEM - I</SelectItem>
-                <SelectItem value="problem2" disabled={submittedProblems.includes('problem2')}>MOOT PROBLEM - II</SelectItem>
+                <SelectItem
+                  value="problem1_petitioner"
+                  disabled={submittedProblems.includes("problem1_petitioner")}
+                >
+                  Moot Memorial - 1 (Petitioner)
+                </SelectItem>
+                <SelectItem
+                  value="problem1_respondent"
+                  disabled={submittedProblems.includes("problem1_respondent")}
+                >
+                  Moot Memorial - 1 (Respondent)
+                </SelectItem>
+                <SelectItem
+                  value="problem2_petitioner"
+                  disabled={submittedProblems.includes("problem2_petitioner")}
+                >
+                  Moot Memorial - 2 (Petitioner)
+                </SelectItem>
+                <SelectItem
+                  value="problem2_respondent"
+                  disabled={submittedProblems.includes("problem2_respondent")}
+                >
+                  Moot Memorial - 2 (Respondent)
+                </SelectItem>
               </SelectContent>
             </Select>
 
@@ -101,7 +147,10 @@ const MemorialUpload = () => {
               <Cloud className="h-12 w-12 text-[#2d4817] mx-auto" />
               <p className="text-gray-600 mb-2">
                 <span className="font-medium">Drag your file(s) or </span>
-                <label htmlFor="memorial-upload" className="text-[#2d4817] hover:text-[#2a4015] cursor-pointer underline">
+                <label
+                  htmlFor="memorial-upload"
+                  className="text-[#2d4817] hover:text-[#2a4015] cursor-pointer underline"
+                >
                   browse
                 </label>
               </p>
@@ -126,7 +175,14 @@ const MemorialUpload = () => {
                   </p>
                   {mootProblem && (
                     <p className="text-sm text-blue-600 mt-1">
-                      Moot Problem: {mootProblem === 'problem1' ? 'MOOT PROBLEM - I' : 'MOOT PROBLEM - II'}
+                      Moot Problem:{" "}
+                      {mootProblem === "problem1_petitioner"
+                        ? "Moot Memorial - 1 (Petitioner)"
+                        : mootProblem === "problem1_respondent"
+                        ? "Moot Memorial - 1 (Respondent)"
+                        : mootProblem === "problem2_petitioner"
+                        ? "Moot Memorial - 2 (Petitioner)"
+                        : "Moot Memorial - 2 (Respondent)"}
                     </p>
                   )}
                   {previewUrl && (
@@ -141,9 +197,19 @@ const MemorialUpload = () => {
                 </div>
               )}
             </div>
+
             {uploadError && <p className="text-red-500 text-sm">{uploadError}</p>}
-            <Button onClick={handleUpload} disabled={!selectedFile || isUploading || !mootProblem} className="w-full mt-4 bg-[#2d4817] hover:bg-[#2a4015] text-white">
-              {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+
+            <Button
+              onClick={handleUpload}
+              disabled={!selectedFile || isUploading || !mootProblem}
+              className="w-full mt-4 bg-[#2d4817] hover:bg-[#2a4015] text-white"
+            >
+              {isUploading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="mr-2 h-4 w-4" />
+              )}
               Upload
             </Button>
 
@@ -168,12 +234,20 @@ const MemorialUpload = () => {
           <div className="space-y-3">
             {memorials.length > 0 ? (
               memorials.map((upload) => (
-                <div key={upload.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div
+                  key={upload.id}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                >
                   <div className="flex items-center gap-3">
                     <FileText className="h-5 w-5 text-gray-600" />
                     <div>
-                      <p className="font-medium text-gray-900">{upload.file.split('/').pop()}</p>
-                      <p className="text-sm text-gray-500">{upload.moot_problem_display} - {new Date(upload.created_at).toLocaleString()}</p>
+                      <p className="font-medium text-gray-900">
+                        {upload.file.split("/").pop()}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {upload.moot_problem_display} -{" "}
+                        {new Date(upload.created_at).toLocaleString()}
+                      </p>
                     </div>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />
