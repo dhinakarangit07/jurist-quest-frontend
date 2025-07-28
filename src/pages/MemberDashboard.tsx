@@ -33,6 +33,7 @@ import Sidebar from "@/components/TeamDashboard/sidebar";
 
 import ContactPage from "@/components/TeamDashboard/ContactPage"
 import DashboardSkeleton from "./DashboardSkeleton";
+import Others from "@/components/TeamDashboard/Others"
 
 import Logo from "@/assets/Logo.png"
 
@@ -134,6 +135,10 @@ const Dashboard = () => {
 
             <TabsContent value="support">
               <ContactPage />
+            </TabsContent>
+
+            <TabsContent value="others">
+              <Others />
             </TabsContent>
           </div>
         </main>
