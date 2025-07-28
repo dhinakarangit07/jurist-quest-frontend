@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Megaphone, Trophy, ChevronDown } from "lucide-react";
-import useAnnouncements from "@/hooks/useAnnouncements";
+import useJuryAnnouncements from "@/hooks/useJuryAnnouncements";
 import AnnouncementFeedSkeleton from "@/components/skeleton/TeamDashboard/AnnouncementFeedSkeleton";
 
 const AnnouncementFeed = () => {
-  const { announcements, isLoading, error } = useAnnouncements();
+  const { juryAnnouncements, isLoading, error } = useJuryAnnouncements();
   const [openAnnouncementId, setOpenAnnouncementId] = useState<number | null>(null);
 
   const toggleAnnouncement = (id: number) => {
@@ -40,7 +40,7 @@ const AnnouncementFeed = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {announcements.map((announcement) => (
+            {juryAnnouncements.map((announcement) => (
                 <div key={announcement.id} className="border-b border-gray-200 last:border-b-0">
                   <button
                     className="w-full flex justify-between items-center py-4 px-4 text-left"

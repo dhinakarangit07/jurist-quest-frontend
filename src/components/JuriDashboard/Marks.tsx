@@ -1,5 +1,4 @@
 "use client"
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -136,13 +135,11 @@ const initialScoresState = () => {
 
 const MarksEntryPage = () => {
   const [applicantScores, setApplicantScores] = useState(initialScoresState())
-  const [respondentScores, setRespondentScores] = useState(initialScoresState())
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
 
-  const handleScoreChange = (team, criterionId, subCriterionId, field, value) => {
-    const setter = team === "applicant" ? setApplicantScores : setRespondentScores
-    setter((prev) => {
+  const handleScoreChange = (criterionId, subCriterionId, field, value) => {
+    setApplicantScores((prev) => {
       const newState = JSON.parse(JSON.stringify(prev)) // Deep copy
       if (subCriterionId) {
         newState[criterionId].sub_scores[subCriterionId][field] = value
@@ -167,13 +164,11 @@ const MarksEntryPage = () => {
   const handleSubmit = async () => {
     setIsSubmitting(true)
     setSubmitMessage("")
-
     // Simulate API call
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate network delay
       console.log("Scores submitted for Match:", matchToScore.match_id)
       console.log("Applicant Scores:", applicantScores)
-      console.log("Respondent Scores:", respondentScores)
       setSubmitMessage("Scores submitted successfully!")
       // In a real app, you would send this data to your backend API
     } catch (error) {
@@ -186,17 +181,14 @@ const MarksEntryPage = () => {
 
   const handleReset = () => {
     setApplicantScores(initialScoresState())
-    setRespondentScores(initialScoresState())
     setSubmitMessage("")
   }
 
   const handleGoBack = () => {
       window.location.href = "/juri-dashboard?view=team"
-    
   }
 
   const applicantTotal = calculateTotal(applicantScores)
-  const respondentTotal = calculateTotal(respondentScores)
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -213,236 +205,87 @@ const MarksEntryPage = () => {
         </Button>
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-2">Marks Entry</h1>
-          <p className="text-lg opacity-90">Jessup Moot Court Competition 2025</p>
-          <p className="text-sm opacity-75">
-            {matchToScore.match_name} - {matchToScore.case_details.case_title}
-          </p>
+          <p className="text-lg opacity-90">{matchToScore.applicant_team.team_name}</p>
+         
         </div>
       </div>
 
-      {/* Match Info Card */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">{matchToScore.match_name}</h2>
-              <p className="text-gray-600">{matchToScore.case_details.case_title}</p>
-              <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-gray-600">
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  {matchToScore.court_room}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  {new Date(matchToScore.date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  {new Date(`2025-01-01T${matchToScore.time}:00`).toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-              <Clock className="h-4 w-4" />
-              Ongoing
-            </div>
-          </div>
+  
 
-          {/* Teams */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-semibold text-blue-800">Applicant Team</h3>
-              <p className="font-medium">{matchToScore.applicant_team.team_name}</p>
-              <p className="text-sm text-gray-600">{matchToScore.applicant_team.university}</p>
-              <div className="mt-2 text-sm">
-                <p className="font-medium">Team Members:</p>
-                <ul className="list-disc list-inside">
-                  {matchToScore.applicant_team.participants.map((member, idx) => (
-                    <li key={idx} className="text-gray-600">
-                      {member.name} ({member.role})
-                    </li>
-                  ))}
-                </ul>
+      {/* Scoring Criteria - Only Applicant Team */}
+      <Card>
+
+        <CardContent className="space-y-6 p-6">
+          {markingCriteria.map((criterion) => (
+            <div key={`applicant-${criterion.id}`} className="border-b pb-4 last:border-b-0">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-medium text-gray-900">{criterion.name}</h3>
+                  <p className="text-xs text-gray-500">{criterion.description}</p>
+                </div>
+                <div className="text-right">
+                  <Input
+                    type="number"
+                    min="0"
+                    max={criterion.max_points}
+                    placeholder="0"
+                    className="w-20 text-right"
+                    value={applicantScores[criterion.id]?.points || ""}
+                    onChange={(e) => handleScoreChange(criterion.id, null, "points", e.target.value)}
+                  />
+                  <p className="text-xs text-gray-500">/ {criterion.max_points}</p>
+                </div>
               </div>
-            </div>
-            <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-              <h3 className="font-semibold text-red-800">Respondent Team</h3>
-              <p className="font-medium">{matchToScore.respondent_team.team_name}</p>
-              <p className="text-sm text-gray-600">{matchToScore.respondent_team.university}</p>
-              <div className="mt-2 text-sm">
-                <p className="font-medium">Team Members:</p>
-                <ul className="list-disc list-inside">
-                  {matchToScore.respondent_team.participants.map((member, idx) => (
-                    <li key={idx} className="text-gray-600">
-                      {member.name} ({member.role})
-                    </li>
+              <Textarea
+                placeholder="Comments (optional)"
+                className="mt-2 text-sm"
+                value={applicantScores[criterion.id]?.comment || ""}
+                onChange={(e) => handleScoreChange(criterion.id, null, "comment", e.target.value)}
+              />
+              {/* Sub-criteria */}
+              {criterion.sub_criteria.length > 0 && (
+                <div className="mt-3 pl-4 space-y-3">
+                  {criterion.sub_criteria.map((sub) => (
+                    <div key={`applicant-${criterion.id}-${sub.id}`} className="flex justify-between items-center">
+                      <Label htmlFor={`applicant-${criterion.id}-${sub.id}`} className="text-sm text-gray-700">
+                        {sub.name}
+                      </Label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          id={`applicant-${criterion.id}-${sub.id}`}
+                          type="number"
+                          min="0"
+                          max={sub.max_points}
+                          placeholder="0"
+                          className="w-16 text-right text-sm"
+                          value={applicantScores[criterion.id]?.sub_scores?.[sub.id]?.points || ""}
+                          onChange={(e) =>
+                            handleScoreChange(criterion.id, sub.id, "points", e.target.value)
+                          }
+                        />
+                        <span className="text-xs text-gray-500">/ {sub.max_points}</span>
+                      </div>
+                    </div>
                   ))}
-                </ul>
-              </div>
+                </div>
+              )}
             </div>
-          </div>
+          ))}
         </CardContent>
       </Card>
-
-      {/* Scoring Criteria */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Applicant Team Scoring */}
-        <Card>
-          <CardHeader className="bg-blue-50">
-            <CardTitle className="text-blue-800">Score Applicant Team</CardTitle>
-            <p className="text-sm text-blue-600">{matchToScore.applicant_team.team_name}</p>
-          </CardHeader>
-          <CardContent className="space-y-6 p-6">
-            {markingCriteria.map((criterion) => (
-              <div key={`applicant-${criterion.id}`} className="border-b pb-4 last:border-b-0">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{criterion.name}</h3>
-                    <p className="text-xs text-gray-500">{criterion.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <Input
-                      type="number"
-                      min="0"
-                      max={criterion.max_points}
-                      placeholder="0"
-                      className="w-20 text-right"
-                      value={applicantScores[criterion.id]?.points || ""}
-                      onChange={(e) => handleScoreChange("applicant", criterion.id, null, "points", e.target.value)}
-                    />
-                    <p className="text-xs text-gray-500">/ {criterion.max_points}</p>
-                  </div>
-                </div>
-                <Textarea
-                  placeholder="Comments (optional)"
-                  className="mt-2 text-sm"
-                  value={applicantScores[criterion.id]?.comment || ""}
-                  onChange={(e) => handleScoreChange("applicant", criterion.id, null, "comment", e.target.value)}
-                />
-                {/* Sub-criteria */}
-                {criterion.sub_criteria.length > 0 && (
-                  <div className="mt-3 pl-4 space-y-3">
-                    {criterion.sub_criteria.map((sub) => (
-                      <div key={`applicant-${criterion.id}-${sub.id}`} className="flex justify-between items-center">
-                        <Label htmlFor={`applicant-${criterion.id}-${sub.id}`} className="text-sm text-gray-700">
-                          {sub.name}
-                        </Label>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            id={`applicant-${criterion.id}-${sub.id}`}
-                            type="number"
-                            min="0"
-                            max={sub.max_points}
-                            placeholder="0"
-                            className="w-16 text-right text-sm"
-                            value={applicantScores[criterion.id]?.sub_scores?.[sub.id]?.points || ""}
-                            onChange={(e) =>
-                              handleScoreChange("applicant", criterion.id, sub.id, "points", e.target.value)
-                            }
-                          />
-                          <span className="text-xs text-gray-500">/ {sub.max_points}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Respondent Team Scoring */}
-        <Card>
-          <CardHeader className="bg-red-50">
-            <CardTitle className="text-red-800">Score Respondent Team</CardTitle>
-            <p className="text-sm text-red-600">{matchToScore.respondent_team.team_name}</p>
-          </CardHeader>
-          <CardContent className="space-y-6 p-6">
-            {markingCriteria.map((criterion) => (
-              <div key={`respondent-${criterion.id}`} className="border-b pb-4 last:border-b-0">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{criterion.name}</h3>
-                    <p className="text-xs text-gray-500">{criterion.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <Input
-                      type="number"
-                      min="0"
-                      max={criterion.max_points}
-                      placeholder="0"
-                      className="w-20 text-right"
-                      value={respondentScores[criterion.id]?.points || ""}
-                      onChange={(e) => handleScoreChange("respondent", criterion.id, null, "points", e.target.value)}
-                    />
-                    <p className="text-xs text-gray-500">/ {criterion.max_points}</p>
-                  </div>
-                </div>
-                <Textarea
-                  placeholder="Comments (optional)"
-                  className="mt-2 text-sm"
-                  value={respondentScores[criterion.id]?.comment || ""}
-                  onChange={(e) => handleScoreChange("respondent", criterion.id, null, "comment", e.target.value)}
-                />
-                {/* Sub-criteria */}
-                {criterion.sub_criteria.length > 0 && (
-                  <div className="mt-3 pl-4 space-y-3">
-                    {criterion.sub_criteria.map((sub) => (
-                      <div key={`respondent-${criterion.id}-${sub.id}`} className="flex justify-between items-center">
-                        <Label htmlFor={`respondent-${criterion.id}-${sub.id}`} className="text-sm text-gray-700">
-                          {sub.name}
-                        </Label>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            id={`respondent-${criterion.id}-${sub.id}`}
-                            type="number"
-                            min="0"
-                            max={sub.max_points}
-                            placeholder="0"
-                            className="w-16 text-right text-sm"
-                            value={respondentScores[criterion.id]?.sub_scores?.[sub.id]?.points || ""}
-                            onChange={(e) =>
-                              handleScoreChange("respondent", criterion.id, sub.id, "points", e.target.value)
-                            }
-                          />
-                          <span className="text-xs text-gray-500">/ {sub.max_points}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Totals and Actions */}
       <Card>
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-            <div className="grid grid-cols-2 gap-8 text-center">
+            <div className="grid grid-cols-1 gap-8 text-center"> {/* Changed grid-cols-2 to grid-cols-1 */}
               <div className="bg-blue-50 p-4 rounded-lg">
                 <p className="text-sm text-blue-700">Applicant Total</p>
                 <p className="text-3xl font-bold text-blue-900">{applicantTotal.toFixed(1)}</p>
                 <p className="text-xs text-gray-500">/ 100</p>
               </div>
-              <div className="bg-red-50 p-4 rounded-lg">
-                <p className="text-sm text-red-700">Respondent Total</p>
-                <p className="text-3xl font-bold text-red-900">{respondentTotal.toFixed(1)}</p>
-                <p className="text-xs text-gray-500">/ 100</p>
-              </div>
+              {/* Removed Respondent Total */}
             </div>
-
             <div className="flex flex-col sm:flex-row gap-3">
               <Button variant="outline" onClick={handleReset} disabled={isSubmitting}>
                 <RefreshCw className="mr-2 h-4 w-4" />
@@ -463,7 +306,6 @@ const MarksEntryPage = () => {
               </Button>
             </div>
           </div>
-
           {submitMessage && (
             <div
               className={`mt-4 p-3 rounded text-center ${
@@ -480,7 +322,7 @@ const MarksEntryPage = () => {
       <Card className="bg-gray-50">
         <CardContent className="p-4">
           <p className="text-sm text-gray-600 text-center">
-            Enter scores for each criterion and sub-criterion for both teams. Click "Submit Scores" when finished.
+            Enter scores for each criterion and sub-criterion for the applicant team. Click "Submit Scores" when finished.
           </p>
         </CardContent>
       </Card>

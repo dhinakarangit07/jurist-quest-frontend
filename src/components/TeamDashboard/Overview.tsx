@@ -4,6 +4,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Users, School, AlertCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import OverviewSkeleton from "@/components/skeleton/TeamDashboard/OverviewSkeleton"
+import {
+  ResponsiveContainer,
+  LineChart,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Line
+} from 'recharts';
 
 interface Participant {
   name: string
@@ -85,6 +94,12 @@ const Overview = ({ overviewData }: OverviewProps) => {
   }
 
   const { team_details, competition_progress, upcoming_deadline } = overviewData
+
+  const chartData = [
+    { name: 'Total Rounds', value: competition_progress.total_rounds },
+    { name: 'Upcoming Rounds', value: competition_progress.upcoming_rounds },
+    { name: 'Ongoing Rounds', value: competition_progress.ongoing_rounds },
+  ];
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -237,6 +252,47 @@ const Overview = ({ overviewData }: OverviewProps) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Chart Section */}
+      <Card className="shadow-lg border-0">
+        <CardContent className="p-4 md:p-6">
+          <h3 className="text-base md:text-lg font-semibold mb-3 text-gray-900">Competition Statistics</h3>
+          <div className="h-64 md:h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={chartData}
+                margin={{
+                  top: 5,
+                  right: 15,
+                  left: 0,
+                  bottom: 5,
+                }}
+              >
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis 
+                  tick={{ fontSize: 12 }}
+                />
+                <Tooltip 
+                  wrapperStyle={{ fontSize: '12px' }}
+                />
+                <Legend 
+                  wrapperStyle={{ fontSize: '12px' }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#2d4817" 
+                  activeDot={{ r: 6 }} 
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

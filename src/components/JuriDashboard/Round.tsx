@@ -1,173 +1,17 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useSearchParams } from 'react-router-dom';
+import useJuryRounds from "@/hooks/useJuryRounds";
 import { Button } from "@/components/ui/button"
 
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, User, Eye, ChevronLeft, Video, ArrowLeft } from "lucide-react" // Added ArrowLeft icon
-
-// Define types for the round and team data
-interface Team {
-  id: string
-  team_id: string
-  institution_name: string
-  team_representative_name: string
-  speaker_1_name: string
-  speaker_1_course_type: string
-  speaker_2_name: string
-  speaker_2_course_type: string
-  researcher_name: string
-}
-
-interface Round {
-  id: string
-  round_name: string
-  status: "Upcoming" | "Ongoing" | "Completed"
-  date: string
-  time: string
-  round_type: "online" | "offline"
-  venue?: string
-  meet_url?: string
-  judge: string
-  team1: Team
-  team2: Team
-}
-
-interface UseJudgeRoundsResult {
-  rounds: Round[]
-  isLoading: boolean
-  error: Error | null
-}
-
-// Dummy data for judge rounds
-const dummyJudgeRounds: Round[] = [
-  {
-    id: "judge-round-1",
-    round_name: "Preliminary Round 1",
-    status: "Upcoming",
-    date: "2025-08-10",
-    time: "10:00 AM",
-    round_type: "online",
-    meet_url: "https://meet.google.com/abc-defg-hij",
-    judge: "Justice Elena Kagan",
-    team1: {
-      id: "team-A",
-      team_id: "Team A",
-      institution_name: "University of Law",
-      team_representative_name: "Alice Smith",
-      speaker_1_name: "Bob Johnson",
-      speaker_1_course_type: "LLB",
-      speaker_2_name: "Charlie Brown",
-      speaker_2_course_type: "LLM",
-      researcher_name: "Diana Prince",
-    },
-    team2: {
-      id: "team-B",
-      team_id: "Team B",
-      institution_name: "National Law School",
-      team_representative_name: "Eve Adams",
-      speaker_1_name: "Frank White",
-      speaker_1_course_type: "LLB",
-      speaker_2_name: "Grace Lee",
-      speaker_2_course_type: "LLM",
-      researcher_name: "Harry Potter",
-    },
-  },
-  {
-    id: "judge-round-2",
-    round_name: "Preliminary Round 2",
-    status: "Ongoing",
-    date: "2025-08-10",
-    time: "02:00 PM",
-    round_type: "offline",
-    venue: "Courtroom 3, Main Building",
-    judge: "Justice Elena Kagan",
-    team1: {
-      id: "team-C",
-      team_id: "Team C",
-      institution_name: "City Law College",
-      team_representative_name: "Ivy Green",
-      speaker_1_name: "Jack Black",
-      speaker_1_course_type: "LLB",
-      speaker_2_name: "Karen Blue",
-      speaker_2_course_type: "LLM",
-      researcher_name: "Liam Red",
-    },
-    team2: {
-      id: "team-D",
-      team_id: "Team D",
-      institution_name: "State University Law",
-      team_representative_name: "Mia Purple",
-      speaker_1_name: "Noah Yellow",
-      speaker_1_course_type: "LLB",
-      speaker_2_name: "Olivia Orange",
-      speaker_2_course_type: "LLM",
-      researcher_name: "Peter Pink",
-    },
-  },
-  {
-    id: "judge-round-3",
-    round_name: "Semi-Final Round",
-    status: "Completed",
-    date: "2025-08-12",
-    time: "09:30 AM",
-    round_type: "online",
-    meet_url: "https://meet.google.com/xyz-uvw-rst",
-    judge: "Justice Elena Kagan",
-    team1: {
-      id: "team-E",
-      team_id: "Team E",
-      institution_name: "Global Law Institute",
-      team_representative_name: "Quinn White",
-      speaker_1_name: "Rachel Black",
-      speaker_1_course_type: "LLB",
-      speaker_2_name: "Sam Grey",
-      speaker_2_course_type: "LLM",
-      researcher_name: "Tina Brown",
-    },
-    team2: {
-      id: "team-F",
-      team_id: "Team F",
-      institution_name: "International Law Academy",
-      team_representative_name: "Uma Green",
-      speaker_1_name: "Victor Blue",
-      speaker_1_course_type: "LLB",
-      speaker_2_name: "Wendy Red",
-      speaker_2_course_type: "LLM",
-      researcher_name: "Xavier Yellow",
-    },
-  },
-]
-
-// useJudgeRounds hook
-const useJudgeRounds = (): UseJudgeRoundsResult => {
-  const [rounds, setRounds] = useState<Round[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
-
-  useEffect(() => {
-    const fetchRounds = async () => {
-      setIsLoading(true)
-      setError(null)
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setRounds(dummyJudgeRounds)
-      } catch (err) {
-        setError(err as Error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchRounds()
-  }, [])
-
-  return { rounds, isLoading, error }
-}
+import { Calendar, MapPin, User, Eye, ChevronLeft, Video, ArrowLeft, FileText } from "lucide-react"
 
 const JudgeRound = () => {
-  const { rounds, isLoading, error } = useJudgeRounds()
+  const [searchParams] = useSearchParams();
+  const teamCode = searchParams.get('teamCode') || '';
+  const { juryRounds, isLoading, error } = useJuryRounds(teamCode);
   const [selectedRound, setSelectedRound] = useState(null)
 
   const handleGoBackToDashboard = () => {
@@ -186,8 +30,37 @@ const JudgeRound = () => {
     return <div className="text-red-500 p-6">Error: {error.message}</div>
   }
 
-  if (!rounds || rounds.length === 0) {
-    return <div className="text-gray-500 p-6">No allocated rounds found.</div>
+  if (!juryRounds || juryRounds.length === 0) {
+    return (
+      <div className="container mx-auto py-8 px-4 md:px-6 lg:px-8">
+        <div className="mb-6 flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-gray-600 hover:text-gray-900"
+            onClick={handleGoBackToDashboard}
+          >
+            <ArrowLeft className="h-6 w-6" />
+            <span className="sr-only">Back to Dashboard</span>
+          </Button>
+        </div>
+        <Card className="shadow-lg rounded-xl border border-gray-200">
+          <CardHeader className="pb-6 border-b border-gray-200">
+            <CardTitle className="text-3xl font-bold text-gray-900">Your Allocated Rounds</CardTitle>
+            <CardDescription className="text-lg text-gray-600">
+              Details of the moot court rounds you are assigned to judge.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              <FileText className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+              <p className="text-xl font-medium">No allocated rounds found.</p>
+              <p className="text-md mt-2">Please check back later or contact the administrator.</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const handleViewDetails = (round) => {
@@ -232,7 +105,7 @@ const JudgeRound = () => {
         {/* Main Content */}
         {!selectedRound ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {rounds.map((round, idx) => (
+            {juryRounds.map((round, idx) => (
               <Card
                 key={round.id || idx}
                 className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
@@ -427,10 +300,8 @@ const JudgeRound = () => {
                       <div className="w-16 h-16 rounded-full bg-[#2d4817] flex items-center justify-center text-white text-xl font-bold shadow-lg">
                         VS
                       </div>
-                      <div className="text-center text-sm text-gray-500">
-                        <p>Judge:</p>
+                      <p className="text-sm font-medium text-gray-500">Judge:</p>
                         <p className="font-medium text-gray-900">{selectedRound.judge}</p>
-                      </div>
                     </div>
                   </div>
 

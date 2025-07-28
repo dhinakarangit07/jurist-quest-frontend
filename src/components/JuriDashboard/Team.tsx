@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import useJuryTeams from "@/hooks/useJuryTeams"
+import TeamCardSkeleton from "@/components/skeleton/TeamDashboard/TeamCardSkeleton"
 
 // Interface for TeamCard props
 interface TeamCardProps {
@@ -113,84 +115,55 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
   )
 }
 
-// Type for team data
-type TeamData = {
-  teamCode: string
-  teamName: string
-  university: string
-  representative: string
-  speaker1: string
-  speaker2: string
-  researcher: string
-}
-
-// Sample team data
-const teams: TeamData[] = [
-  {
-    teamCode: "T001",
-    teamName: "Legal Eagles",
-    university: "National Law University, Delhi",
-    representative: "Aisha Khan",
-    speaker1: "Rahul Sharma",
-    speaker2: "Priya Singh",
-    researcher: "Vikram Reddy",
-  },
-  {
-    teamCode: "T002",
-    teamName: "Justice Seekers",
-    university: "Symbiosis Law School, Pune",
-    representative: "Siddharth Gupta",
-    speaker1: "Ananya Rao",
-    speaker2: "Karan Malhotra",
-    researcher: "Deepika Kumari",
-  },
-  {
-    teamCode: "T003",
-    teamName: "Veritas Squad",
-    university: "Gujarat National Law University",
-    representative: "Neha Patel",
-    speaker1: "Arjun Desai",
-    speaker2: "Rhea Kapoor",
-    researcher: "Sameer Joshi",
-  },
-  {
-    teamCode: "T004",
-    teamName: "The Advocates",
-    university: "NALSAR University of Law, Hyderabad",
-    representative: "Ishaan Verma",
-    speaker1: "Meera Choudhary",
-    speaker2: "Rohan Singh",
-    researcher: "Sara Ali",
-  },
-  {
-    teamCode: "T005",
-    teamName: "Lex Crusaders",
-    university: "Amity Law School, Noida",
-    representative: "Divya Sharma",
-    speaker1: "Akash Kumar",
-    speaker2: "Shruti Gupta",
-    researcher: "Vivek Singh",
-  },
-]
-
 // Main Team Component
 const Team = () => {
+  const { juryTeams, isLoading, error } = useJuryTeams();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen flex-col items-center p-4 md:p-8 lg:p-12 bg-gray-50 dark:bg-gray-900">
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-50">
+          Your Teams
+        </h1>
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
+          <TeamCardSkeleton />
+          <TeamCardSkeleton />
+          <TeamCardSkeleton />
+          <TeamCardSkeleton />
+        </section>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="flex min-h-screen flex-col items-center p-4 md:p-8 lg:p-12 bg-gray-50 dark:bg-gray-900">
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-50">
+          Your Teams
+        </h1>
+        <div className="text-center py-8 text-red-500">
+          <p>{error.message}</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-8 lg:p-12 bg-gray-50 dark:bg-gray-900">
       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-50">
-        Participating Teams
+        Your Teams
       </h1>
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
-        {teams.map((team) => (
+        {juryTeams.map((team) => (
           <TeamCard
-            key={team.teamCode}
-            teamCode={team.teamCode}
-            teamName={team.teamName}
-            university={team.university}
-            representative={team.representative}
-            speaker1={team.speaker1}
-            speaker2={team.speaker2}
-            researcher={team.researcher}
+            key={team.team_id}
+            teamCode={team.team_id}
+            teamName={team.team_representative_name}
+            university={team.institution_name}
+            representative={team.team_representative_name}
+            speaker1={team.speaker_1_name}
+            speaker2={team.speaker_2_name}
+            researcher={team.researcher_name}
           />
         ))}
       </section>
