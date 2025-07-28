@@ -11,6 +11,7 @@ import {
   ChevronDown,
   UserRound,
   PhoneCallIcon,
+  Archive,
 } from "lucide-react"
 import { TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -93,6 +94,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
                 >
                   <PhoneCallIcon className="h-5 w-5" />
                   <span>Contact</span>
+                </TabsTrigger>
+          <TabsTrigger
+                  value="others"
+                  className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-10 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
+                >
+                  <Archive className="h-5 w-5" />
+                  <span>Others</span>
                 </TabsTrigger>
         </TabsList>
       </nav>
