@@ -28,6 +28,7 @@ import Memorial from "@/components/JuriDashboard/Memorial";
 import Round from "@/components/JuriDashboard/Round";
 
 import Sidebar from "@/components/JuriDashboard/sidebar";
+import Profile from "@/components/JuriDashboard/Profile";
 import DashboardSkeleton from "./DashboardSkeleton";
 
 const Dashboard = () => {
@@ -103,6 +104,10 @@ const Dashboard = () => {
 
           <TabsContent value="team">
             <Team/>
+          </TabsContent>
+
+          <TabsContent value="profile">
+            <Profile/>
           </TabsContent>
 
           <TabsContent value="memorial">
