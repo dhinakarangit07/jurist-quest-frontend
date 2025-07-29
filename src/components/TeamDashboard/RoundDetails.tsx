@@ -249,12 +249,7 @@ const RoundDetails = () => {
                       <div className="w-16 h-16 rounded-full bg-[#2d4817] flex items-center justify-center text-white text-xl font-bold shadow-lg">
                         VS
                       </div>
-                      <div className="text-center text-sm text-gray-500">
-                        {" "}
-                        {/* Removed absolute positioning */}
-                        <p>Judge:</p>
-                        <p className="font-medium text-gray-900">{selectedRound.judge}</p>
-                      </div>
+                     
                     </div>
                   </div>
 

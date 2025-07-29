@@ -300,8 +300,7 @@ const JudgeRound = () => {
                       <div className="w-16 h-16 rounded-full bg-[#2d4817] flex items-center justify-center text-white text-xl font-bold shadow-lg">
                         VS
                       </div>
-                      <p className="text-sm font-medium text-gray-500">Judge:</p>
-                        <p className="font-medium text-gray-900">{selectedRound.judge}</p>
+                      
                     </div>
                   </div>
 
