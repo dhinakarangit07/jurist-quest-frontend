@@ -67,6 +67,14 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
             <span>Teams</span>
           </TabsTrigger>
 
+          <TabsTrigger 
+            value="profile" 
+            className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
+          >
+            <User className="h-5 w-5" />
+            <span>Profile</span>
+          </TabsTrigger>
+
         </TabsList>
       </nav>
 
