@@ -21,6 +21,7 @@ interface SidebarProps {
   toggleSidebar: () => void
 }
 
+
 const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
   const [isTeamsOpen, setTeamsOpen] = useState(false)
 
