@@ -168,7 +168,7 @@ const MarksEntryPage = () => {
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-emerald-700 to-teal-600 rounded-xl shadow-lg overflow-hidden p-6 text-white">
+        <div className="relative bg-[#2d4817] rounded-xl shadow-lg overflow-hidden p-6 text-white">
           <Button 
             variant="ghost" 
             size="icon" 
@@ -276,7 +276,7 @@ const MarksEntryPage = () => {
                         a 15.9155 15.9155 0 0 1 0 31.831
                         a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
-                      stroke={scorePercentage >= 70 ? "#10b981" : scorePercentage >= 40 ? "#f59e0b" : "#ef4444"}
+                      stroke={scorePercentage >= 70 ? "#2d4817" : scorePercentage >= 40 ? "#f59e0b" : "#ef4444"}
                       strokeWidth="3"
                       strokeDasharray={`${scorePercentage}, 100`}
                     />
@@ -293,8 +293,8 @@ const MarksEntryPage = () => {
                     {totalScore} out of {totalMaxScore} points
                   </p>
                   <p className={`text-sm font-medium mt-1 ${
-                    scorePercentage >= 70 ? "text-emerald-600" : 
-                    scorePercentage >= 40 ? "text-amber-600" : "text-red-600"
+                    scorePercentage >= 70 ? "text-[#2d4817]" : 
+                    scorePercentage >= 40 ? "text-[#2d4817]" : "text-red-600"
                   }`}>
                     ({scorePercentage}%)
                   </p>
@@ -314,7 +314,7 @@ const MarksEntryPage = () => {
                 <Button 
                   onClick={handleSubmit} 
                   disabled={isSubmitting}
-                  className="bg-emerald-700 hover:bg-emerald-800 gap-2"
+                  className="bg-[#2d4817] hover:bg-[#2d4817] gap-2"
                 >
                   {isSubmitting ? (
                     <RefreshCw className="h-4 w-4 animate-spin" />
