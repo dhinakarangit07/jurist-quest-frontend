@@ -129,21 +129,6 @@ const SpecialOffersDemo = () => {
               </div>
             </div>
 
-            {/* Right Badge */}
-            <div
-              style={{ backgroundColor: "#2d4817" }}
-              className="md:w-1/3 p-10 text-white text-center flex flex-col items-center justify-center space-y-5"
-            >
-              <BookOpen className="h-14 w-14 opacity-90" />
-              <h3 className="text-2xl font-bold">Early Bird Offer</h3>
-              <p className="text-sm opacity-90">
-                Enroll by <strong>{offers.deadline}</strong> to save $100
-              </p>
-              <div className="mt-4 flex items-center gap-2 text-white/90 text-sm">
-                <Calendar className="h-5 w-5" />
-                Next Batch: <strong>{offers.nextBatch}</strong>
-              </div>
-            </div>
           </div>
         </div>
       </div>
