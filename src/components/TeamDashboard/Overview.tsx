@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Users, School, AlertCircle } from "lucide-react"
+import { Users, School, AlertCircle, Calendar } from "lucide-react"
 import { useEffect, useState } from "react"
 import OverviewSkeleton from "@/components/skeleton/TeamDashboard/OverviewSkeleton"
 import {
@@ -25,10 +25,19 @@ interface TeamDetails {
   participants: Participant[]
 }
 
+interface CurrentRound {
+  round_name: string
+  status: string | null
+}
+
+interface NextUpcomingRound {
+  round_name: string
+  date: string | null
+}
+
 interface CompetitionProgress {
-  total_rounds: number
-  upcoming_rounds: number
-  ongoing_rounds: number
+  current_round: CurrentRound
+  next_upcoming_round: NextUpcomingRound
 }
 
 interface UpcomingDeadline {
@@ -95,10 +104,15 @@ const Overview = ({ overviewData }: OverviewProps) => {
 
   const { team_details, competition_progress, upcoming_deadline } = overviewData
 
+  // Calculate days until next upcoming round
+  const daysUntilNextRound = competition_progress.next_upcoming_round.date
+    ? Math.ceil((new Date(competition_progress.next_upcoming_round.date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+    : 0
+
+  // Chart data for current round status (1 if ongoing, 0 if not) and days until next round
   const chartData = [
-    { name: 'Total Rounds', value: competition_progress.total_rounds },
-    { name: 'Upcoming Rounds', value: competition_progress.upcoming_rounds },
-    { name: 'Ongoing Rounds', value: competition_progress.ongoing_rounds },
+    { name: 'Current Round Status', value: competition_progress.current_round.status ? 1 : 0 },
+    { name: 'Days Until Next Round', value: daysUntilNextRound >= 0 ? daysUntilNextRound : 0 },
   ];
 
   return (
@@ -135,57 +149,53 @@ const Overview = ({ overviewData }: OverviewProps) => {
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-3 text-white">Your Competition Progress</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-              {/* Total Rounds Card */}
+              {/* Current Round Card */}
               <div className="bg-white rounded-lg p-3 md:p-4 border border-gray-200">
                 <div className="flex items-center gap-2 md:gap-3 mb-2">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-[#2d4817] rounded flex items-center justify-center flex-shrink-0">
-                    <Users className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                    <Calendar className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm md:text-lg font-bold text-gray-900">Total Rounds</div>
+                    <div className="text-sm md:text-lg font-bold text-gray-900">Current Round</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="h-1.5 md:h-2 w-full bg-gray-200 rounded-full">
-                    <div className="h-full w-[80%] bg-[#2d4817] rounded-full"></div>
-                  </div>
-                  <div className="text-xs text-gray-500">{competition_progress.total_rounds} Rounds</div>
+                <div className="text-xs md:text-sm text-gray-600">
+                  {competition_progress.current_round.round_name}
                 </div>
               </div>
 
-              {/* Upcoming Rounds Card */}
+              {/* Next Upcoming Round Card */}
               <div className="bg-white rounded-lg p-3 md:p-4 border border-gray-200">
                 <div className="flex items-center gap-2 md:gap-3 mb-2">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-[#2d4817] rounded flex items-center justify-center flex-shrink-0">
-                    <Users className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                    <Calendar className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm md:text-lg font-bold text-gray-900">Upcoming Rounds</div>
+                    <div className="text-sm md:text-lg font-bold text-gray-900">Next Upcoming Round</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="h-1.5 md:h-2 w-full bg-gray-200 rounded-full">
-                    <div className="h-full w-[50%] bg-[#2d4817] rounded-full"></div>
-                  </div>
-                  <div className="text-xs text-gray-500">{competition_progress.upcoming_rounds} Rounds</div>
+                <div className="text-xs md:text-sm text-gray-600">
+                  {competition_progress.next_upcoming_round.round_name}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  Date: {competition_progress.next_upcoming_round.date
+                    ? new Date(competition_progress.next_upcoming_round.date).toLocaleDateString()
+                    : 'None'}
                 </div>
               </div>
 
-              {/* Ongoing Rounds Card */}
+              {/* Current Round Status Card */}
               <div className="bg-white rounded-lg p-3 md:p-4 border border-gray-200">
                 <div className="flex items-center gap-2 md:gap-3 mb-2">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-[#2d4817] rounded flex items-center justify-center flex-shrink-0">
-                    <Users className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                    <Calendar className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm md:text-lg font-bold text-gray-900">Ongoing Rounds</div>
+                    <div className="text-sm md:text-lg font-bold text-gray-900">Current Round Status</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="h-1.5 md:h-2 w-full bg-gray-200 rounded-full">
-                    <div className="h-full w-[75%] bg-[#2d4817] rounded-full"></div>
-                  </div>
-                  <div className="text-xs text-gray-500">{competition_progress.ongoing_rounds} Rounds</div>
+                <div className="text-xs md:text-sm text-gray-600">
+                  {competition_progress.current_round.status || 'None'}
                 </div>
               </div>
             </div>
