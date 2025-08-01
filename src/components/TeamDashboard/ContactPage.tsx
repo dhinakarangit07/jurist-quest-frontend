@@ -5,87 +5,120 @@ import { Button } from "@/components/ui/button"
 import { MessageCircle, Phone } from "lucide-react"
 
 const ContactPage = () => {
-  const handleCallTechnicalSupport = () => {
-    window.location.href = "tel:+919677883855"
+  const handleEmailGeneralInquiries = () => {
+    window.location.href = "mailto:info@juristquest.com"
   }
 
-  const handleEmailCompetitionQueries = () => {
-    window.location.href = "mailto:info@juristquest.com"
+  const handleEmailCustomerSupport = () => {
+    window.location.href = "mailto:customersupport@juristquest.com"
+  }
+
+  const handleEmailSponsorship = () => {
+    window.location.href = "mailto:partners@juristquest.com"
+  }
+
+  const handleCallGeneralSponsorship = () => {
+    window.location.href = "tel:+919677873855"
+  }
+
+  const handleCallCustomerSupport = () => {
+    window.location.href = "tel:+919677883855"
   }
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
-      {/* Helpdesk Contacts Section */}
+      {/* New Contact Cards Section */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Helpdesk Contacts</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Technical Support */}
+          {/* General Inquiries */}
+          <Card className="bg-white shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <MessageCircle className="h-8 w-8 text-[#2d4817]" />
+                <div className="ml-4">
+                  <h3 className="font-semibold text-gray-900 mb-1">General Inquiries</h3>
+                  <p className="text-sm text-gray-600">For general questions</p>
+                </div>
+              </div>
+              <Button
+                className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white"
+                onClick={handleEmailGeneralInquiries}
+              >
+                Send Mail
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Customer Support mail */}
+          <Card className="bg-white shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <MessageCircle className="h-8 w-8 text-[#2d4817]" />
+                <div className="ml-4">
+                  <h3 className="font-semibold text-gray-900 mb-1">Customer Support Mail</h3>
+                  <p className className="text-sm text-gray-600">
+                    For customer assistance via email
+                  </p>
+                </div>
+              </div>
+              <Button
+                className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white"
+                onClick={handleEmailCustomerSupport}
+              >
+                Send Mail
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Sponsorship / Partnership */}
+          <Card className="bg-white shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <MessageCircle className="h-8 w-8 text-[#2d4817]" />
+                <div className="ml-4">
+                  <h3 className="font-semibold text-gray-900 mb-1">Sponsorship / Partnership</h3>
+                  <p className="text-sm text-gray-600">For collaboration opportunities</p>
+                </div>
+              </div>
+              <Button className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white" onClick={handleEmailSponsorship}>
+                Send Mail
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* General Inquiry / Sponsorship / Partnership Call */}
           <Card className="bg-white shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
                 <Phone className="h-8 w-8 text-[#2d4817]" />
                 <div className="ml-4">
-                  <h3 className="font-semibold text-gray-900 mb-1">Technical Support</h3>
-                  <p className="text-sm text-gray-600">Platform & Upload Issues</p>
+                  <h3 className="font-semibold text-gray-900 mb-1">General Inquiry / Sponsorship / Partnership</h3>
+                  <p className="text-sm text-gray-600">Call for general or partnership inquiries</p>
                 </div>
               </div>
               <Button
                 className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white"
-                onClick={handleCallTechnicalSupport}
+                onClick={handleCallGeneralSponsorship}
               >
                 Call
               </Button>
             </CardContent>
           </Card>
 
-          {/* Competition Queries */}
+          {/* Customer Support call */}
           <Card className="bg-white shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
-                <MessageCircle className="h-8 w-8 text-[#2d4817]" />
+                <Phone className="h-8 w-8 text-[#2d4817]" />
                 <div className="ml-4">
-                  <h3 className="font-semibold text-gray-900 mb-1">Competition Queries</h3>
-                  <p className="text-sm text-gray-600">Rules & Procedures</p>
+                  <h3 className="font-semibold text-gray-900 mb-1">Customer Support Call</h3>
+                  <p className="text-sm text-gray-600">Call for immediate customer assistance</p>
                 </div>
               </div>
-              <Button
-                className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white"
-                onClick={handleEmailCompetitionQueries}
-              >
-                Email
+              <Button className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white" onClick={handleCallCustomerSupport}>
+                Call
               </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* WhatsApp Groups Section */}
-      <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-4">WhatsApp Groups</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* General Updates */}
-          <Card className="bg-white shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                <MessageCircle className="h-8 w-8 text-[#2d4817]" />
-                <div className="ml-4">
-                  <h3 className="font-semibold text-gray-900 mb-1">General Updates</h3>
-                </div>
-              </div>
-              <Button className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white">Open</Button>
-            </CardContent>
-          </Card>
-
-          {/* Technical Support */}
-          <Card className="bg-white shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                <MessageCircle className="h-8 w-8 text-[#2d4817]" />
-                <div className="ml-4">
-                  <h3 className="font-semibold text-gray-900 mb-1">Technical Support</h3>
-                </div>
-              </div>
-              <Button className="w-full bg-[#2d4817] hover:bg-[#2a4015] text-white">Open</Button>
             </CardContent>
           </Card>
         </div>
@@ -96,6 +129,9 @@ const ContactPage = () => {
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Find Us</h1>
         <Card className="bg-white shadow-sm overflow-hidden">
           <CardContent className="p-0">
+            <p className="text-gray-700 p-4 text-left">
+              7th Floor, Centre Point, 2/4, Mount Pollamallee High Road, Manapakkam, Porur, Chennai, Tamil Nadu 600089
+            </p>
             <iframe
               src="https://www.google.com/maps?q=7th+Floor,+Centre+Point,+2/4,+Mount+Pollamallee+High+Road,+Manapakkam,+Porur,+Chennai,+Tamil+Nadu+600089&output=embed"
               width="100%"
