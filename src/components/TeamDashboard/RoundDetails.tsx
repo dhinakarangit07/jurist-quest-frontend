@@ -37,7 +37,7 @@ const RoundDetails = () => {
   const upcomingRounds = rounds.filter((round) => round.status.toLowerCase() === "upcoming")
   const upcomingRoundsCount = upcomingRounds.length
 
-  // Check if current round should show full details (ongoing and within 30 minutes)
+  // Check if current round should show full details (ongoing and within 5 minutes)
   const shouldShowCurrentRoundDetails = () => {
     if (!currentRound || currentRound.status.toLowerCase() !== "ongoing") return false
 
@@ -59,8 +59,8 @@ const RoundDetails = () => {
       console.log("Current time:", now)
       console.log("Minutes difference:", minutesDifference)
 
-      // Show details if start time is within 30 minutes or has passed
-      return minutesDifference <= 30
+      // Show details if start time is within 5 minutes or has passed
+      return minutesDifference <= 5
     } catch (error) {
       console.error("Error parsing date/time:", error)
       return true // Show details by default if there's an error
@@ -184,7 +184,7 @@ const RoundDetails = () => {
 
                         <div className="bg-gray-50 rounded-lg p-4 text-center">
                           <p className="text-sm text-gray-600">
-                            Round details will be available 30 minutes before start time
+                            Round details will be available 5 minutes before start time
                           </p>
                         </div>
                       </>
