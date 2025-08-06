@@ -1,5 +1,6 @@
 // components/SpecialOffersDemo.tsx
 import { Shield, Users, BookOpen, Tag, CheckCircle, Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const SpecialOffersDemo = () => {
   // Embedded offer data (no external import)
@@ -77,12 +78,14 @@ const SpecialOffersDemo = () => {
                 <div>
                   
                 </div>
+                <a href = "https://clh-frontend-p2.vercel.app/" target="_blank" >
                 <button
                   style={{ backgroundColor: "#2d4817" }}
                   className="px-8 py-4 text-white font-semibold rounded-xl hover:bg-[#2a4015] transition-all duration-200 transform hover:scale-105 shadow-md"
                 >
                   Get Access Now
                 </button>
+                </a>
               </div>
             </div>
           </div>
