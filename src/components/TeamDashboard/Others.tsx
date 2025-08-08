@@ -1,21 +1,9 @@
 // components/SpecialOffersDemo.tsx
-import { Shield, Users, BookOpen, Tag, CheckCircle, Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Shield, Users, Tag, CheckCircle } from "lucide-react";
+import useLegalHubAccess from "@/hooks/useLegalHubAccess";
 
 const SpecialOffersDemo = () => {
-  // Embedded offer data (no external import)
-  const offers = {
-    deadline: "October 31, 2025",
-    nextBatch: "November 15, 2025",
-    hub: {
-      originalPrice: 499,
-      discountedPrice: 349,
-    },
-    internship: {
-      originalPrice: 299,
-      discountedPrice: 199,
-    },
-  };
+  const { hasRequested, isLoading, error, requestAccess } = useLegalHubAccess();
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -78,14 +66,15 @@ const SpecialOffersDemo = () => {
                 <div>
                   
                 </div>
-                <a href = "https://clh-frontend-p2.vercel.app/" target="_blank" >
                 <button
-                  style={{ backgroundColor: "#2d4817" }}
+                  style={{ backgroundColor: hasRequested ? "#6c757d" : "#2d4817" }}
                   className="px-8 py-4 text-white font-semibold rounded-xl hover:bg-[#2a4015] transition-all duration-200 transform hover:scale-105 shadow-md"
+                  onClick={requestAccess}
+                  disabled={hasRequested || isLoading}
                 >
-                  Get Access Now
+                  {isLoading ? 'Submitting...' : hasRequested ? 'Already Requested' : 'Request Access'}
                 </button>
-                </a>
+                {error && <p className="text-red-500">{error}</p>}
               </div>
             </div>
           </div>
