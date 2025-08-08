@@ -29,7 +29,7 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest.pem
           chmod 600 jurist_quest.pem
           echo "Testing SSH connection to ${{ secrets.EC2_HOST }}..."
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
+          ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
 
       - name: Copy dist folder to EC2
         uses: appleboy/scp-action@v0.1.6
