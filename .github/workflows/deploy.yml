@@ -24,12 +24,12 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Test SSH connection to EC2
+      - name: Save SSH key and test connection
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
+          echo "Testing SSH connection to ${{ secrets.EC2_HOST }}..."
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
-
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.6
