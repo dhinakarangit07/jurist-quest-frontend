@@ -3,7 +3,7 @@ name: Deploy Vite App to EC2
 on:
   push:
     branches:
-      - main  # or your deployment branch
+      - main  
 
 jobs:
   build-and-deploy:
@@ -24,6 +24,13 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Test SSH connection to EC2
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
+
+
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.6
         with:
@@ -32,3 +39,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "dist/*"
           target: "/var/www/myapp"
+          port: 22
+          timeout: 1m
+          overwrite: true
