@@ -1,19 +1,19 @@
-name: Deploy Vite App to EC2
+name: Build and Deploy Vite App to EC2
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -21,17 +21,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
+      - name: Build Vite project
         run: npm run build
 
-      - name: Save SSH key and test connection
+      - name: Save SSH key and test SSH connection
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
           echo "Testing SSH connection to ${{ secrets.EC2_HOST }}..."
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
 
-      - name: Copy files to EC2
+      - name: Copy dist folder to EC2
         uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -42,3 +42,8 @@ jobs:
           port: 22
           timeout: 1m
           overwrite: true
+
+      - name: Restart nginx on EC2 (if applicable)
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} \
+          "sudo systemctl restart nginx"
