@@ -24,11 +24,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Setup SSH key and test connection
+      - name: Setup SSH key
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest
-          chmod 600 jurist_quest
-          ssh -o StrictHostKeyChecking=no -i jurist_quest ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
+          echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest.pem
+          chmod 600 jurist_quest.pem
+          ls -l jurist_quest.pem  # Debug: verify key file exists
+
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
 
       - name: Copy dist files to EC2
         uses: appleboy/scp-action@v0.1.6
@@ -38,10 +42,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "dist/*"
           target: "/var/www/myapp"
-          port: 22
-          timeout: 1m
           overwrite: true
 
-      - name: Restart nginx on EC2 (optional)
+      - name: Restart nginx on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i jurist_quest ubuntu@${{ secrets.EC2_HOST }} "sudo systemctl restart nginx"
+          ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "sudo systemctl restart nginx"
