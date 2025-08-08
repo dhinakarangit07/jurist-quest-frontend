@@ -28,11 +28,9 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest.pem
           chmod 600 jurist_quest.pem
-          ls -l jurist_quest.pem  # Debug: verify key file exists
 
       - name: Test SSH connection
-        run: |
-          ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
+        run: ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
 
       - name: Copy dist files to EC2
         uses: appleboy/scp-action@v0.1.6
@@ -44,6 +42,5 @@ jobs:
           target: "/var/www/myapp"
           overwrite: true
 
-      - name: Restart nginx on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "sudo systemctl restart nginx"
+      - name: Restart nginx
+        run: ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "sudo systemctl restart nginx"
