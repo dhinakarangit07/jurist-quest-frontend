@@ -34,6 +34,7 @@ const MemorialUpload = () => {
   } = useMemorials();
   const [isUploading, setIsUploading] = useState(false);
   const [mootProblem, setMootProblem] = useState("");
+  const [language, setLanguage] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -63,13 +64,14 @@ const MemorialUpload = () => {
   };
 
   const handleUpload = async () => {
-    if (selectedFile && mootProblem) {
+    if (selectedFile && mootProblem && language) {
       setIsUploading(true);
       setUploadError(null);
       try {
-        await uploadMemorial(selectedFile, mootProblem);
+        await uploadMemorial(selectedFile, `${mootProblem}_${language}`);
         setSelectedFile(null);
         setMootProblem("");
+        setLanguage("");
         setPreviewUrl(null);
         const fileInput = document.getElementById("memorial-upload") as HTMLInputElement;
         if (fileInput) fileInput.value = "";
@@ -93,7 +95,26 @@ const MemorialUpload = () => {
     );
   }
 
-  const submittedProblems = memorials.map((m) => m.moot_problem);
+  // Extract base problem names without language for disabling already uploaded options
+  const getBaseProblemName = (problem: string) => {
+    const parts = problem.split('_');
+    return `${parts[0]}_${parts[1]}`; // Returns "problem1_petitioner" etc.
+  };
+
+  const submittedProblems = memorials.map(m => getBaseProblemName(m.moot_problem));
+  const showLanguageSelect = mootProblem === "problem1_petitioner" || mootProblem === "problem1_respondent";
+
+  // Function to format the display of the moot problem with language
+  const formatProblemDisplay = (problem: string) => {
+    const parts = problem.split('_');
+    if (parts.length === 3) {
+      const problemNumber = parts[0].replace('problem', '');
+      const side = parts[1] === 'petitioner' ? 'Petitioner' : 'Respondent';
+      const language = parts[2].charAt(0).toUpperCase() + parts[2].slice(1);
+      return `Moot Memorial - ${problemNumber} (${side}) - ${language}`;
+    }
+    return problem;
+  };
 
   return (
     <div className="space-y-6">
@@ -138,6 +159,21 @@ const MemorialUpload = () => {
                 </SelectItem>
               </SelectContent>
             </Select>
+
+            {showLanguageSelect && (
+              <Select onValueChange={setLanguage} value={language}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Language for Moot Oration" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="english">English</SelectItem>
+                  <SelectItem value="tamil">Tamil</SelectItem>
+                  <SelectItem value="telugu">Telugu</SelectItem>
+                  <SelectItem value="kannada">Kannada</SelectItem>
+                  <SelectItem value="malayalam">Malayalam</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
 
             <div
               className="border-2 border-dashed border-[#2d4817] rounded-lg p-8 text-center hover:border-[#2a4015] transition-colors"
@@ -185,6 +221,11 @@ const MemorialUpload = () => {
                         : "Moot Memorial - 2 (Respondent)"}
                     </p>
                   )}
+                  {language && showLanguageSelect && (
+                    <p className="text-sm text-blue-600 mt-1">
+                      Language: {language.charAt(0).toUpperCase() + language.slice(1)}
+                    </p>
+                  )}
                   {previewUrl && (
                     <div className="mt-4">
                       <iframe
@@ -202,7 +243,7 @@ const MemorialUpload = () => {
 
             <Button
               onClick={handleUpload}
-              disabled={!selectedFile || isUploading || !mootProblem}
+              disabled={!selectedFile || isUploading || !mootProblem || (showLanguageSelect && !language)}
               className="w-full mt-4 bg-[#2d4817] hover:bg-[#2a4015] text-white"
             >
               {isUploading ? (
@@ -217,6 +258,7 @@ const MemorialUpload = () => {
               <p>• Only PDF files are accepted</p>
               <p>• Maximum file size: 10MB</p>
               <p>• File naming: Memorial_TeamName_v[version].pdf</p>
+              <p>• Moot Memorial 2 will use English as the default language for Moot Oration</p>
             </div>
           </div>
         </CardContent>
@@ -245,7 +287,7 @@ const MemorialUpload = () => {
                         {upload.file.split("/").pop()}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {upload.moot_problem_display} -{" "}
+                        {formatProblemDisplay(upload.moot_problem)} -{" "}
                         {new Date(upload.created_at).toLocaleString()}
                       </p>
                     </div>
