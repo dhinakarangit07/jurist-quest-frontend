@@ -26,8 +26,8 @@ jobs:
 
       - name: Save SSH key and test SSH connection
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest.pem
+          chmod 600 jurist_quest.pem
           echo "Testing SSH connection to ${{ secrets.EC2_HOST }}..."
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
 
