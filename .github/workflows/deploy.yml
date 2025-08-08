@@ -1,4 +1,4 @@
-name: Build and Deploy Vite App to EC2
+name: Deploy Vite App to EC2
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -21,17 +21,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Vite project
+      - name: Build project
         run: npm run build
 
-      - name: Save SSH key and test SSH connection
+      - name: Setup SSH key and test connection
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest.pem
-          chmod 600 jurist_quest.pem
-          echo "Testing SSH connection to ${{ secrets.EC2_HOST }}..."
-          ssh -o StrictHostKeyChecking=no -i jurist_quest.pem ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
+          echo "${{ secrets.EC2_SSH_KEY }}" > jurist_quest
+          chmod 600 jurist_quest
+          ssh -o StrictHostKeyChecking=no -i jurist_quest ubuntu@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful'"
 
-      - name: Copy dist folder to EC2
+      - name: Copy dist files to EC2
         uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -43,7 +42,6 @@ jobs:
           timeout: 1m
           overwrite: true
 
-      - name: Restart nginx on EC2 (if applicable)
+      - name: Restart nginx on EC2 (optional)
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} \
-          "sudo systemctl restart nginx"
+          ssh -o StrictHostKeyChecking=no -i jurist_quest ubuntu@${{ secrets.EC2_HOST }} "sudo systemctl restart nginx"
