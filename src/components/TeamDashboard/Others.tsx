@@ -72,7 +72,7 @@ const SpecialOffersDemo = () => {
                   onClick={requestAccess}
                   disabled={hasRequested || isLoading}
                 >
-                  {isLoading ? 'Submitting...' : hasRequested ? 'Already Requested' : 'Request Access'}
+                  {isLoading ? 'Please Wait...' : hasRequested ? 'Already Requested' : 'Request Access'}
                 </button>
                 {error && <p className="text-red-500">{error}</p>}
               </div>
