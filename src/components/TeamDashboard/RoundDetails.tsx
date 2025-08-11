@@ -31,6 +31,13 @@ const RoundDetails = () => {
       setOngoingRound(ongoing);
       setUpcomingRounds(upcoming);
       setCompletedRounds(completed);
+
+      // Set default selected round to ongoing round or first upcoming round
+      if (ongoing) {
+        setSelectedRound(ongoing);
+      } else if (upcoming.length > 0) {
+        setSelectedRound(upcoming[0]);
+      }
     }
   }, [rounds])
 
@@ -43,7 +50,15 @@ const RoundDetails = () => {
   }
 
   if (!rounds || rounds.length === 0) {
-    return <div className="text-gray-500 p-6">No rounds found.</div>
+    return (
+      <div className="text-gray-500 p-6 text-center">
+        <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
+          <Clock className="h-8 w-8 text-gray-500" />
+        </div>
+        <h3 className="font-semibold text-gray-700 text-lg mb-2">No Rounds Assigned</h3>
+        <p className="text-sm text-gray-600">Your round is about to begin soon! Please check back later for updates on your team assignments and round details.</p>
+      </div>
+    )
   }
 
   const getCompletedRoundStatus = (round) => {
@@ -153,7 +168,7 @@ const RoundDetails = () => {
                       <Clock className="h-8 w-8 text-gray-500" />
                     </div>
                     <h3 className="font-semibold text-gray-700 text-lg mb-2">No Ongoing Rounds</h3>
-                    <p className="text-sm text-gray-600">There are no rounds currently in progress.</p>
+                    <p className="text-sm text-gray-600">Your round is about to begin soon! Please check back later for updates on your team assignments and round details.</p>
                   </div>
                 )}
               </CardContent>
@@ -184,6 +199,9 @@ const RoundDetails = () => {
                           ? "1 Round Scheduled"
                           : `${upcomingRounds.length} Rounds Scheduled`}
                     </h3>
+                    {upcomingRounds.length === 0 && (
+                      <p className="text-sm text-gray-600">Your round is about to begin soon! Please check back later for updates on your team assignments and round details.</p>
+                    )}
                   </div>
 
                   {upcomingRounds.length > 0 && (
@@ -333,33 +351,33 @@ const RoundDetails = () => {
                           selectedRound.team1?.id === teamData?.id ? "text-[#2d4817]" : "text-gray-900"
                         }`}
                       >
-                        {selectedRound.team1?.team_id}
+                        {selectedRound.team1?.team_id || "TBD"}
                       </h3>
-                      <p className="text-sm text-gray-500">{selectedRound.team1?.institution_name}</p>
+                      <p className="text-sm text-gray-500">{selectedRound.team1?.institution_name || "To Be Assigned"}</p>
                     </div>
 
                     <div className="space-y-4">
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Representative</p>
-                        <p className="text-gray-900 font-medium">{selectedRound.team1?.team_representative_name}</p>
+                        <p className="text-gray-900 font-medium">{selectedRound.team1?.team_representative_name || "TBD"}</p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 1</p>
                         <p className="text-gray-900">
-                          {selectedRound.team1?.speaker_1_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_1_course_type})</span>
+                          {selectedRound.team1?.speaker_1_name || "TBD"}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_1_course_type || "N/A"})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 2</p>
                         <p className="text-gray-900">
-                          {selectedRound.team1?.speaker_2_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_2_course_type})</span>
+                          {selectedRound.team1?.speaker_2_name || "TBD"}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_2_course_type || "N/A"})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Researcher</p>
-                        <p className="text-gray-900">{selectedRound.team1?.researcher_name}</p>
+                        <p className="text-gray-900">{selectedRound.team1?.researcher_name || "TBD"}</p>
                       </div>
                     </div>
                   </div>
@@ -390,33 +408,33 @@ const RoundDetails = () => {
                           selectedRound.team2?.id === teamData?.id ? "text-[#2d4817]" : "text-gray-900"
                         }`}
                       >
-                        {selectedRound.team2?.team_id}
+                        {selectedRound.team2?.team_id || "TBD"}
                       </h3>
-                      <p className="text-sm text-gray-500">{selectedRound.team2?.institution_name}</p>
+                      <p className="text-sm text-gray-500">{selectedRound.team2?.institution_name || "To Be Assigned"}</p>
                     </div>
 
                     <div className="space-y-4">
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Representative</p>
-                        <p className="text-gray-900 font-medium">{selectedRound.team2?.team_representative_name}</p>
+                        <p className="text-gray-900 font-medium">{selectedRound.team2?.team_representative_name || "TBD"}</p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 1</p>
                         <p className="text-gray-900">
-                          {selectedRound.team2?.speaker_1_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_1_course_type})</span>
+                          {selectedRound.team2?.speaker_1_name || "TBD"}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_1_course_type || "N/A"})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 2</p>
                         <p className="text-gray-900">
-                          {selectedRound.team2?.speaker_2_name}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_2_course_type})</span>
+                          {selectedRound.team2?.speaker_2_name || "TBD"}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_2_course_type || "N/A"})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Researcher</p>
-                        <p className="text-gray-900">{selectedRound.team2?.researcher_name}</p>
+                        <p className="text-gray-900">{selectedRound.team2?.researcher_name || "TBD"}</p>
                       </div>
                     </div>
                   </div>
