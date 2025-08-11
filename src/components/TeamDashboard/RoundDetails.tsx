@@ -1,8 +1,10 @@
 "use client"
+
+import type React from "react"
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, User, Eye, ChevronLeft, Video, Trophy, Clock, Target } from "lucide-react"
+import { Calendar, Video, Trophy, MapPin, User, Eye, ChevronLeft, Clock, Target } from "lucide-react"
 import useRounds from "@/hooks/useRounds"
 import RoundDetailsSkeleton from "@/components/skeleton/TeamDashboard/RoundDetailsSkeleton"
 
@@ -31,13 +33,6 @@ const RoundDetails = () => {
       setOngoingRound(ongoing);
       setUpcomingRounds(upcoming);
       setCompletedRounds(completed);
-
-      // Set default selected round to ongoing round or first upcoming round
-      if (ongoing) {
-        setSelectedRound(ongoing);
-      } else if (upcoming.length > 0) {
-        setSelectedRound(upcoming[0]);
-      }
     }
   }, [rounds])
 
@@ -50,15 +45,17 @@ const RoundDetails = () => {
   }
 
   if (!rounds || rounds.length === 0) {
-    return (
-      <div className="text-gray-500 p-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
-          <Clock className="h-8 w-8 text-gray-500" />
-        </div>
-        <h3 className="font-semibold text-gray-700 text-lg mb-2">No Rounds Assigned</h3>
-        <p className="text-sm text-gray-600">Your round is about to begin soon! Please check back later for updates on your team assignments and round details.</p>
+    return <div className="max-w-6xl mx-auto">
+        <Card className="border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <CardContent className="p-6 text-center">
+            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-8 w-8 text-gray-500" />
+            </div>
+            <h3 className="font-semibold text-gray-700 text-lg mb-2">No Rounds Found</h3>
+            <p className="text-sm text-gray-600">There are no rounds scheduled at this time. Check back later for updates!</p>
+          </CardContent>
+        </Card>
       </div>
-    )
   }
 
   const getCompletedRoundStatus = (round) => {
@@ -168,7 +165,7 @@ const RoundDetails = () => {
                       <Clock className="h-8 w-8 text-gray-500" />
                     </div>
                     <h3 className="font-semibold text-gray-700 text-lg mb-2">No Ongoing Rounds</h3>
-                    <p className="text-sm text-gray-600">Your round is about to begin soon! Please check back later for updates on your team assignments and round details.</p>
+                    <p className="text-sm text-gray-600">There are no rounds currently in progress.</p>
                   </div>
                 )}
               </CardContent>
@@ -199,9 +196,6 @@ const RoundDetails = () => {
                           ? "1 Round Scheduled"
                           : `${upcomingRounds.length} Rounds Scheduled`}
                     </h3>
-                    {upcomingRounds.length === 0 && (
-                      <p className="text-sm text-gray-600">Your round is about to begin soon! Please check back later for updates on your team assignments and round details.</p>
-                    )}
                   </div>
 
                   {upcomingRounds.length > 0 && (
@@ -351,33 +345,33 @@ const RoundDetails = () => {
                           selectedRound.team1?.id === teamData?.id ? "text-[#2d4817]" : "text-gray-900"
                         }`}
                       >
-                        {selectedRound.team1?.team_id || "TBD"}
+                        {selectedRound.team1?.team_id}
                       </h3>
-                      <p className="text-sm text-gray-500">{selectedRound.team1?.institution_name || "To Be Assigned"}</p>
+                      <p className="text-sm text-gray-500">{selectedRound.team1?.institution_name}</p>
                     </div>
 
                     <div className="space-y-4">
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Representative</p>
-                        <p className="text-gray-900 font-medium">{selectedRound.team1?.team_representative_name || "TBD"}</p>
+                        <p className="text-gray-900 font-medium">{selectedRound.team1?.team_representative_name}</p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 1</p>
                         <p className="text-gray-900">
-                          {selectedRound.team1?.speaker_1_name || "TBD"}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_1_course_type || "N/A"})</span>
+                          {selectedRound.team1?.speaker_1_name}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_1_course_type})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 2</p>
                         <p className="text-gray-900">
-                          {selectedRound.team1?.speaker_2_name || "TBD"}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_2_course_type || "N/A"})</span>
+                          {selectedRound.team1?.speaker_2_name}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team1?.speaker_2_course_type})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Researcher</p>
-                        <p className="text-gray-900">{selectedRound.team1?.researcher_name || "TBD"}</p>
+                        <p className="text-gray-900">{selectedRound.team1?.researcher_name}</p>
                       </div>
                     </div>
                   </div>
@@ -408,33 +402,33 @@ const RoundDetails = () => {
                           selectedRound.team2?.id === teamData?.id ? "text-[#2d4817]" : "text-gray-900"
                         }`}
                       >
-                        {selectedRound.team2?.team_id || "TBD"}
+                        {selectedRound.team2?.team_id}
                       </h3>
-                      <p className="text-sm text-gray-500">{selectedRound.team2?.institution_name || "To Be Assigned"}</p>
+                      <p className="text-sm text-gray-500">{selectedRound.team2?.institution_name}</p>
                     </div>
 
                     <div className="space-y-4">
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Representative</p>
-                        <p className="text-gray-900 font-medium">{selectedRound.team2?.team_representative_name || "TBD"}</p>
+                        <p className="text-gray-900 font-medium">{selectedRound.team2?.team_representative_name}</p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 1</p>
                         <p className="text-gray-900">
-                          {selectedRound.team2?.speaker_1_name || "TBD"}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_1_course_type || "N/A"})</span>
+                          {selectedRound.team2?.speaker_1_name}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_1_course_type})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker 2</p>
                         <p className="text-gray-900">
-                          {selectedRound.team2?.speaker_2_name || "TBD"}{" "}
-                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_2_course_type || "N/A"})</span>
+                          {selectedRound.team2?.speaker_2_name}{" "}
+                          <span className="text-gray-500 text-sm">({selectedRound.team2?.speaker_2_course_type})</span>
                         </p>
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Researcher</p>
-                        <p className="text-gray-900">{selectedRound.team2?.researcher_name || "TBD"}</p>
+                        <p className="text-gray-900">{selectedRound.team2?.researcher_name}</p>
                       </div>
                     </div>
                   </div>
@@ -448,4 +442,82 @@ const RoundDetails = () => {
   )
 }
 
-export default RoundDetails
+const Index = () => {
+  useEffect(() => {
+    document.title = "Competition Schedule 2025 | roundwatch-hub"
+  }, [])
+
+  type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>
+  const schedule: { title: string; mode?: string; date: string; icon: IconType }[] = [
+    { title: "Prelims", mode: "Virtual", date: "15–30 September 2025", icon: Video },
+    { title: "Quarter Finals", mode: "Virtual", date: "15–30 September 2025", icon: Video },
+    { title: "Semi-Finals", date: "25–30 October 2025", icon: MapPin },
+    { title: "Finals", date: "29 November 2025", icon: Trophy },
+  ]
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "EventSeries",
+    name: "Roundwatch Hub Competition 2025",
+    startDate: "2025-09-15",
+    eventSchedule: schedule.map((s) => ({
+      "@type": "Schedule",
+      name: s.title,
+      byDay: ["https://schema.org/Monday", "https://schema.org/Sunday"],
+      startDate: s.date,
+    })),
+    subEvents: [
+      { "@type": "Event", name: "Prelims (Virtual)", startDate: "2025-09-15", endDate: "2025-09-30" },
+      { "@type": "Event", name: "Quarter Finals (Virtual)", startDate: "2025-09-15", endDate: "2025-09-30" },
+      { "@type": "Event", name: "Semi-Finals", startDate: "2025-10-25", endDate: "2025-10-30" },
+      { "@type": "Event", name: "Finals", startDate: "2025-11-29" },
+    ],
+  }
+
+  return (
+    <main className="min-h-screen bg-background">
+      <header className="container py-10">
+        <div className="rounded-2xl bg-gradient-to-b from-secondary/60 to-background border border-border p-8 shadow-sm">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Competition Schedule 2025</h1>
+          <p className="mt-2 text-muted-foreground">Key dates at a glance</p>
+
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {schedule.map((item, idx) => {
+              const Icon = item.icon
+              return (
+                <Card key={idx} className="transition-transform duration-200 hover:scale-[1.01] hover:shadow-md">
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                      </div>
+                      {item.mode && (
+                        <Badge variant="secondary">{item.mode}</Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>{item.date}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+        </div>
+      </header>
+
+      <RoundDetails />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </main>
+  )
+}
+
+export default Index
