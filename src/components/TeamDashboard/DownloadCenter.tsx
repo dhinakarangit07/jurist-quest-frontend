@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, FileText } from "lucide-react";
@@ -19,6 +19,20 @@ const DownloadCenter = () => {
 
   if (error) {
     return <div>Error: {error.message}</div>;
+  }
+
+  if (downloads.length === 0) {
+    return (
+      <div className="text-gray-500 p-6 text-center">
+        <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
+          <Download className="h-8 w-8 text-gray-500" />
+        </div>
+        <h3 className="font-semibold text-gray-700 text-lg mb-2">No Materials Available</h3>
+        <p className="text-sm text-gray-600">
+          Your download materials will be available soon! Please check back later for the files and resources related to your round.
+        </p>
+      </div>
+    );
   }
 
   return (

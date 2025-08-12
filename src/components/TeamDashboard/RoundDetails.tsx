@@ -1,8 +1,10 @@
 "use client"
+
+import type React from "react"
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, User, Eye, ChevronLeft, Video, Trophy, Clock, Target } from "lucide-react"
+import { Calendar, Video, Trophy, MapPin, User, Eye, ChevronLeft, Clock, Target } from "lucide-react"
 import useRounds from "@/hooks/useRounds"
 import RoundDetailsSkeleton from "@/components/skeleton/TeamDashboard/RoundDetailsSkeleton"
 
@@ -11,12 +13,28 @@ const RoundDetails = () => {
   const [teamData, setTeamData] = useState(null)
   const [selectedRound, setSelectedRound] = useState(null)
 
+  const [ongoingRound, setOngoingRound] = useState(null)
+  const [upcomingRounds, setUpcomingRounds] = useState([])
+  const [completedRounds, setCompletedRounds] = useState([])
+
   useEffect(() => {
     const storedTeamData = localStorage.getItem("team_data")
     if (storedTeamData) {
       setTeamData(JSON.parse(storedTeamData))
     }
   }, [])
+
+  useEffect(() => {
+    if (rounds) {
+      const ongoing = rounds.find(r => r.status === 'ongoing');
+      const upcoming = rounds.filter(r => r.status === 'upcoming');
+      const completed = rounds.filter(r => r.status !== 'ongoing' && r.status !== 'upcoming');
+      
+      setOngoingRound(ongoing);
+      setUpcomingRounds(upcoming);
+      setCompletedRounds(completed);
+    }
+  }, [rounds])
 
   if (isLoading) {
     return <RoundDetailsSkeleton />
@@ -27,52 +45,29 @@ const RoundDetails = () => {
   }
 
   if (!rounds || rounds.length === 0) {
-    return <div className="text-gray-500 p-6">No rounds found.</div>
+    return <div className="max-w-6xl mx-auto">
+        <Card className="border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <CardContent className="p-6 text-center">
+            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-8 w-8 text-gray-500" />
+            </div>
+            <h3 className="font-semibold text-gray-700 text-lg mb-2">No Rounds Found</h3>
+            <p className="text-sm text-gray-600">There are no rounds scheduled at this time. Check back later for updates!</p>
+          </CardContent>
+        </Card>
+      </div>
   }
 
-  // Find current round (ongoing status)
-  const currentRound = rounds.find((round) => round.status.toLowerCase() === "ongoing") || rounds[0]
-
-  // Count upcoming rounds
-  const upcomingRounds = rounds.filter((round) => round.status.toLowerCase() === "upcoming")
-  const upcomingRoundsCount = upcomingRounds.length
-
-  // Check if current round should show full details (ongoing and within 5 minutes)
-  const shouldShowCurrentRoundDetails = () => {
-    if (!currentRound || currentRound.status.toLowerCase() !== "ongoing") return false
-
-    try {
-      // Parse the round date and time
-      const dateTimeString = `${currentRound.date}T${currentRound.time}`
-      const roundDateTime = new Date(dateTimeString)
-
-      if (isNaN(roundDateTime.getTime())) {
-        console.error("Invalid date/time format:", dateTimeString)
-        return true // Show details by default if parsing fails
-      }
-
-      const now = new Date()
-      const timeDifference = roundDateTime.getTime() - now.getTime()
-      const minutesDifference = timeDifference / (1000 * 60)
-
-      console.log("Round time:", roundDateTime)
-      console.log("Current time:", now)
-      console.log("Minutes difference:", minutesDifference)
-
-      // Show details if start time is within 5 minutes or has passed
-      return minutesDifference <= 5
-    } catch (error) {
-      console.error("Error parsing date/time:", error)
-      return true // Show details by default if there's an error
+  const getCompletedRoundStatus = (round) => {
+    if (round.status && round.status.startsWith("Winner:")) {
+        const winnerTeamId = round.status.split(" ")[1];
+        if (winnerTeamId === teamData?.team_id) {
+            return "Won";
+        } else {
+            return "Lost";
+        }
     }
-  }
-
-  // Determine current round status
-  const getCurrentRoundStatus = () => {
-    if (currentRound?.status.toLowerCase() === "ongoing") return "In Progress"
-    if (currentRound?.winner_team_id === teamData?.id) return "Won"
-    if (currentRound?.winner_team_id && currentRound?.winner_team_id !== teamData?.id) return "Lost"
-    return "In Progress"
+    return "Evaluating";
   }
 
   const handleViewDetails = (round) => {
@@ -112,89 +107,71 @@ const RoundDetails = () => {
                     <Target className="h-6 w-6 text-[#2d4817]" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">Current Round</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Ongoing Round</h2>
                     <p className="text-sm text-gray-500">Active competition</p>
                   </div>
                 </div>
 
-                {currentRound && (
+                {ongoingRound ? (
                   <div className="space-y-4">
-                    {shouldShowCurrentRoundDetails() ? (
-                      <>
-                        <div className="bg-[#2d4817]/5 rounded-lg p-4">
-                          <h3 className="font-semibold text-[#2d4817] mb-2">{currentRound.round_name}</h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                            <Calendar className="h-4 w-4" />
-                            <span>
-                              {currentRound.date} • {currentRound.time}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                            {currentRound.round_type === "online" ? (
-                              <Video className="h-4 w-4" />
-                            ) : (
-                              <MapPin className="h-4 w-4" />
-                            )}
-                            <span>{currentRound.round_type === "online" ? "Online Meeting" : currentRound.venue}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <User className="h-4 w-4" />
-                            <span>Judge: {currentRound.judge}</span>
-                          </div>
-                        </div>
+                    <div className="bg-[#2d4817]/5 rounded-lg p-4">
+                      <h3 className="font-semibold text-[#2d4817] mb-2">{ongoingRound.round_name}</h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                        <Calendar className="h-4 w-4" />
+                        <span>
+                          {ongoingRound.date} • {ongoingRound.time}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                        {ongoingRound.round_type === "online" ? (
+                          <Video className="h-4 w-4" />
+                        ) : (
+                          <MapPin className="h-4 w-4" />
+                        )}
+                        <span>{ongoingRound.round_type === "online" ? "Online Meeting" : ongoingRound.venue}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <User className="h-4 w-4" />
+                        <span>Judge: {ongoingRound.judge}</span>
+                      </div>
+                    </div>
 
-                        <div className="bg-gray-50 rounded-lg p-4">
-                          <h4 className="text-sm font-medium text-gray-500 mb-3">Match-up</h4>
-                          <div className="flex items-center justify-between">
-                            <div className="text-center">
-                              <p className="font-semibold text-gray-900">{currentRound.team1?.team_id}</p>
-                              <p className="text-xs text-gray-500">{currentRound.team1?.institution_name}</p>
-                            </div>
-                            <div className="px-3 py-1 bg-[#2d4817] text-white rounded-full text-xs font-medium">VS</div>
-                            <div className="text-center">
-                              <p className="font-semibold text-gray-900">{currentRound.team2?.team_id}</p>
-                              <p className="text-xs text-gray-500">{currentRound.team2?.institution_name}</p>
-                            </div>
-                          </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-gray-500 mb-3">Match-up</h4>
+                      <div className="flex items-center justify-between">
+                        <div className="text-center">
+                          <p className="font-semibold text-gray-900">{ongoingRound.team1?.team_id}</p>
+                          <p className="text-xs text-gray-500">{ongoingRound.team1?.institution_name}</p>
                         </div>
+                        <div className="px-3 py-1 bg-[#2d4817] text-white rounded-full text-xs font-medium">VS</div>
+                        <div className="text-center">
+                          <p className="font-semibold text-gray-900">{ongoingRound.team2?.team_id}</p>
+                          <p className="text-xs text-gray-500">{ongoingRound.team2?.institution_name}</p>
+                        </div>
+                      </div>
+                    </div>
 
-                        <button
-                          onClick={() => handleViewDetails(currentRound)}
-                          className="w-full bg-[#2d4817] hover:bg-[#233a12] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                        >
-                          <Eye className="h-4 w-4" />
-                          View Details
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div className="bg-[#2d4817]/5 rounded-lg p-6 text-center">
-                          <div className="w-16 h-16 rounded-full bg-[#2d4817]/10 flex items-center justify-center mx-auto mb-4">
-                            <Clock className="h-8 w-8 text-[#2d4817]" />
-                          </div>
-                          <h3 className="font-semibold text-[#2d4817] text-lg mb-2">Coming Soon</h3>
-                          <p className="text-sm text-gray-600 mb-3">{currentRound.round_name}</p>
-                          <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                            <Calendar className="h-4 w-4" />
-                            <span>
-                              {currentRound.date} • {currentRound.time}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="bg-gray-50 rounded-lg p-4 text-center">
-                          <p className="text-sm text-gray-600">
-                            Round details will be available 5 minutes before start time
-                          </p>
-                        </div>
-                      </>
-                    )}
+                    <button
+                      onClick={() => handleViewDetails(ongoingRound)}
+                      className="w-full bg-[#2d4817] hover:bg-[#233a12] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                    >
+                      <Eye className="h-4 w-4" />
+                      View Details
+                    </button>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 rounded-lg p-6 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
+                      <Clock className="h-8 w-8 text-gray-500" />
+                    </div>
+                    <h3 className="font-semibold text-gray-700 text-lg mb-2">No Ongoing Rounds</h3>
+                    <p className="text-sm text-gray-600">There are no rounds currently in progress.</p>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Upcoming Rounds Count Card */}
+            {/* Upcoming Rounds Card */}
             <Card className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
@@ -210,23 +187,18 @@ const RoundDetails = () => {
                 <div className="space-y-4">
                   <div className="bg-blue-50 rounded-lg p-6 text-center">
                     <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl font-bold text-blue-600">{upcomingRoundsCount}</span>
+                      <span className="text-3xl font-bold text-blue-600">{upcomingRounds.length}</span>
                     </div>
                     <h3 className="font-semibold text-blue-700 text-lg mb-2">
-                      {upcomingRoundsCount === 0
+                      {upcomingRounds.length === 0
                         ? "No Upcoming Rounds"
-                        : upcomingRoundsCount === 1
+                        : upcomingRounds.length === 1
                           ? "1 Round Scheduled"
-                          : `${upcomingRoundsCount} Rounds Scheduled`}
+                          : `${upcomingRounds.length} Rounds Scheduled`}
                     </h3>
-                    <p className="text-sm text-gray-600">
-                      {upcomingRoundsCount === 0
-                        ? "All rounds completed or no future rounds scheduled"
-                        : `You have ${upcomingRoundsCount} upcoming ${upcomingRoundsCount === 1 ? "round" : "rounds"} to prepare for`}
-                    </p>
                   </div>
 
-                  {upcomingRoundsCount > 0 && (
+                  {upcomingRounds.length > 0 && (
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-gray-500 mb-3">Upcoming Rounds</h4>
                       <div className="space-y-3">
@@ -244,123 +216,61 @@ const RoundDetails = () => {
                       </div>
                     </div>
                   )}
-
-                  {upcomingRoundsCount > 0 ? (
-                    <button
-                      onClick={() => handleViewDetails(upcomingRounds[0])}
-                      className="hidden w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                    >
-                      <Eye className="h-4 w-4" />
-                      View Next Round
-                    </button>
-                  ) : (
-                    <div className="w-full bg-gray-100 text-gray-500 font-medium py-2 px-4 rounded-lg text-center">
-                      No rounds to view
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
 
-            {/* Current Round Status Card */}
+            {/* Completed Rounds Card */}
             <Card className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className={`p-2 rounded-lg ${
-                      getCurrentRoundStatus() === "Won"
-                        ? "bg-green-100"
-                        : getCurrentRoundStatus() === "Lost"
-                          ? "bg-red-100"
-                          : "bg-orange-100"
-                    }`}
-                  >
-                    <Trophy
-                      className={`h-6 w-6 ${
-                        getCurrentRoundStatus() === "Won"
-                          ? "text-green-600"
-                          : getCurrentRoundStatus() === "Lost"
-                            ? "text-red-600"
-                            : "text-orange-600"
-                      }`}
-                    />
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <Trophy className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">Round Status</h2>
-                    <p className="text-sm text-gray-500">Current performance</p>
+                    <h2 className="text-xl font-bold text-gray-900">Completed Rounds</h2>
+                    <p className="text-sm text-gray-500">Past performances</p>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div
-                    className={`rounded-lg p-6 text-center ${
-                      getCurrentRoundStatus() === "Won"
-                        ? "bg-green-50 border border-green-200"
-                        : getCurrentRoundStatus() === "Lost"
-                          ? "bg-red-50 border border-red-200"
-                          : "bg-orange-50 border border-orange-200"
-                    }`}
-                  >
-                    <div
-                      className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${
-                        getCurrentRoundStatus() === "Won"
-                          ? "bg-green-100"
-                          : getCurrentRoundStatus() === "Lost"
-                            ? "bg-red-100"
-                            : "bg-orange-100"
-                      }`}
-                    >
-                      <Trophy
-                        className={`h-8 w-8 ${
-                          getCurrentRoundStatus() === "Won"
-                            ? "text-green-600"
-                            : getCurrentRoundStatus() === "Lost"
-                              ? "text-red-600"
-                              : "text-orange-600"
-                        }`}
-                      />
-                    </div>
-                    <h3
-                      className={`text-2xl font-bold mb-2 ${
-                        getCurrentRoundStatus() === "Won"
-                          ? "text-green-700"
-                          : getCurrentRoundStatus() === "Lost"
-                            ? "text-red-700"
-                            : "text-orange-700"
-                      }`}
-                    >
-                      {getCurrentRoundStatus()}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {getCurrentRoundStatus() === "Won"
-                        ? "Congratulations on your victory!"
-                        : getCurrentRoundStatus() === "Lost"
-                          ? "Better luck in the next round!"
-                          : "Round is currently in progress"}
-                    </p>
-                  </div>
-
-                  {currentRound && (
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="text-sm font-medium text-gray-500 mb-2">Round Details</h4>
-                      <p className="font-semibold text-gray-900 mb-1">{currentRound.round_name}</p>
-                      <p className="text-sm text-gray-600">{currentRound.date}</p>
+                  {completedRounds.length > 0 ? (
+                    completedRounds.map(round => {
+                      const status = getCompletedRoundStatus(round);
+                      return (
+                        <div key={round.id} className={`rounded-lg p-4 text-center ${
+                          status === "Won"
+                            ? "bg-green-50 border border-green-200"
+                            : status === "Lost"
+                              ? "bg-red-50 border border-red-200"
+                              : "bg-orange-50 border border-orange-200"
+                        }`}>
+                          <h3 className={`text-lg font-bold mb-1 ${
+                            status === "Won"
+                              ? "text-green-700"
+                              : status === "Lost"
+                                ? "text-red-700"
+                                : "text-orange-700"
+                          }`}>
+                            {round.round_name}: {status}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {round.date}
+                          </p>
+                          <button
+                            onClick={() => handleViewDetails(round)}
+                            className="mt-2 text-sm text-blue-600 hover:underline"
+                          >
+                            View Details
+                          </button>
+                        </div>
+                      )
+                    })
+                  ) : (
+                    <div className="bg-gray-50 rounded-lg p-6 text-center">
+                      <p className="text-sm text-gray-600">No completed rounds yet.</p>
                     </div>
                   )}
-
-                  {/* <button
-                    onClick={() => handleViewDetails(currentRound)}
-                    className={`w-full font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-                      getCurrentRoundStatus() === "Won"
-                        ? "bg-green-600 hover:bg-green-700 text-white"
-                        : getCurrentRoundStatus() === "Lost"
-                          ? "bg-red-600 hover:bg-red-700 text-white"
-                          : "bg-orange-600 hover:bg-orange-700 text-white"
-                    }`}
-                  >
-                    <Eye className="h-4 w-4" />
-                    View Round Details
-                  </button> */}
                 </div>
               </CardContent>
             </Card>
@@ -532,4 +442,82 @@ const RoundDetails = () => {
   )
 }
 
-export default RoundDetails
+const Index = () => {
+  useEffect(() => {
+    document.title = "Competition Schedule 2025 | roundwatch-hub"
+  }, [])
+
+  type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>
+  const schedule: { title: string; mode?: string; date: string; icon: IconType }[] = [
+    { title: "Prelims", mode: "Virtual", date: "15–30 September 2025", icon: Video },
+    { title: "Quarter Finals", mode: "Virtual", date: "15–30 September 2025", icon: Video },
+    { title: "Semi-Finals", date: "25–30 October 2025", icon: MapPin },
+    { title: "Finals", date: "29 November 2025", icon: Trophy },
+  ]
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "EventSeries",
+    name: "Roundwatch Hub Competition 2025",
+    startDate: "2025-09-15",
+    eventSchedule: schedule.map((s) => ({
+      "@type": "Schedule",
+      name: s.title,
+      byDay: ["https://schema.org/Monday", "https://schema.org/Sunday"],
+      startDate: s.date,
+    })),
+    subEvents: [
+      { "@type": "Event", name: "Prelims (Virtual)", startDate: "2025-09-15", endDate: "2025-09-30" },
+      { "@type": "Event", name: "Quarter Finals (Virtual)", startDate: "2025-09-15", endDate: "2025-09-30" },
+      { "@type": "Event", name: "Semi-Finals", startDate: "2025-10-25", endDate: "2025-10-30" },
+      { "@type": "Event", name: "Finals", startDate: "2025-11-29" },
+    ],
+  }
+
+  return (
+    <main className="min-h-screen bg-background">
+      <header className="container py-10">
+        <div className="rounded-2xl bg-gradient-to-b from-secondary/60 to-background border border-border p-8 shadow-sm">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Competition Schedule 2025</h1>
+          <p className="mt-2 text-muted-foreground">Key dates at a glance</p>
+
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {schedule.map((item, idx) => {
+              const Icon = item.icon
+              return (
+                <Card key={idx} className="transition-transform duration-200 hover:scale-[1.01] hover:shadow-md">
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                      </div>
+                      {item.mode && (
+                        <Badge variant="secondary">{item.mode}</Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>{item.date}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+        </div>
+      </header>
+
+      <RoundDetails />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </main>
+  )
+}
+
+export default Index

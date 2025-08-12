@@ -28,16 +28,22 @@ interface TeamDetails {
 interface CurrentRound {
   round_name: string
   status: string | null
+  finish_time: string | null
 }
 
 interface NextUpcomingRound {
   round_name: string
   date: string | null
+  time: string | null
 }
 
 interface CompetitionProgress {
   current_round: CurrentRound
   next_upcoming_round: NextUpcomingRound
+  last_round_status: string | null
+  total_rounds: number
+  upcoming_rounds: number
+  ongoing_rounds: number
 }
 
 interface UpcomingDeadline {
@@ -58,35 +64,8 @@ interface OverviewProps {
 const Overview = ({ overviewData }: OverviewProps) => {
   const [daysUntilDeadline, setDaysUntilDeadline] = useState(0)
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
-  const registrationEndDate = new Date("2025-09-14T00:00:00")
-
-  const calculateTimeLeft = () => {
-    const now = new Date()
-    const difference = registrationEndDate.getTime() - now.getTime()
-
-    let newTimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 }
-
-    if (difference > 0) {
-      newTimeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      }
-    }
-    setTimeLeft(newTimeLeft)
-  }
-
-  useEffect(() => {
-    calculateTimeLeft()
-
-    const timer = setInterval(() => {
-      calculateTimeLeft()
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [])
+  const [countdownLabel, setCountdownLabel] = useState("Competition starts in")
+  const [countdownSubLabel, setCountdownSubLabel] = useState("at 15 September 2025")
 
   useEffect(() => {
     if (overviewData?.upcoming_deadline?.deadline) {
@@ -96,6 +75,51 @@ const Overview = ({ overviewData }: OverviewProps) => {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
       setDaysUntilDeadline(diffDays)
     }
+
+    let targetDate = new Date("2025-09-14T00:00:00");
+    let label = "Competition starts in";
+    let subLabel = "at 15 September 2025";
+
+    if (overviewData?.competition_progress) {
+        const { current_round, next_upcoming_round } = overviewData.competition_progress;
+        if (current_round.finish_time) {
+            targetDate = new Date(current_round.finish_time);
+            label = "Current round ends in";
+            subLabel = `at ${targetDate.toLocaleString()}`;
+        } else if (next_upcoming_round.date && next_upcoming_round.time) {
+            targetDate = new Date(`${next_upcoming_round.date}T${next_upcoming_round.time}`);
+            label = "Next round starts in";
+            subLabel = `at ${targetDate.toLocaleString()}`;
+        }
+    }
+
+    setCountdownLabel(label);
+    setCountdownSubLabel(subLabel);
+
+    const calculateTimeLeft = () => {
+      const now = new Date()
+      const difference = targetDate.getTime() - now.getTime()
+
+      let newTimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 }
+
+      if (difference > 0) {
+        newTimeLeft = {
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        }
+      }
+      setTimeLeft(newTimeLeft)
+    }
+
+    calculateTimeLeft()
+
+    const timer = setInterval(() => {
+      calculateTimeLeft()
+    }, 1000)
+
+    return () => clearInterval(timer)
   }, [overviewData])
 
   if (!overviewData) {
@@ -104,15 +128,10 @@ const Overview = ({ overviewData }: OverviewProps) => {
 
   const { team_details, competition_progress, upcoming_deadline } = overviewData
 
-  // Calculate days until next upcoming round
-  const daysUntilNextRound = competition_progress.next_upcoming_round.date
-    ? Math.ceil((new Date(competition_progress.next_upcoming_round.date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
-    : 0
-
-  // Chart data for current round status (1 if ongoing, 0 if not) and days until next round
   const chartData = [
-    { name: 'Current Round Status', value: competition_progress.current_round.status ? 1 : 0 },
-    { name: 'Days Until Next Round', value: daysUntilNextRound >= 0 ? daysUntilNextRound : 0 },
+    { name: 'Total Rounds', value: competition_progress.total_rounds },
+    { name: 'Upcoming Rounds', value: competition_progress.upcoming_rounds },
+    { name: 'Ongoing Rounds', value: competition_progress.ongoing_rounds },
   ];
 
   return (
@@ -131,7 +150,7 @@ const Overview = ({ overviewData }: OverviewProps) => {
 
             {/* Countdown Timer - Responsive Styling */}
             <div className="bg-white text-gray-900 border border-[#2d4817] rounded-lg p-3 md:p-4 text-center w-full md:w-auto">
-              <p className="text-xs md:text-sm text-gray-900 mb-1">Competition starts in</p>
+              <p className="text-xs md:text-sm text-gray-900 mb-1">{countdownLabel}</p>
               <div className="bg-[#2d4817] text-white rounded-md p-2 mb-2 inline-block min-w-[120px] md:min-w-[160px]">
                 <div className="text-2xl md:text-4xl font-bold flex flex-wrap justify-center gap-1 md:gap-2">
                   <span className="text-xs md:text-base md:font-normal block w-full md:hidden">Time Left:</span>
@@ -141,7 +160,7 @@ const Overview = ({ overviewData }: OverviewProps) => {
                   <span>{timeLeft.seconds.toString().padStart(2, "0")}S</span>
                 </div>
               </div>
-              <p className="text-xs md:text-sm text-gray-900">at 15 September 2025</p>
+              <p className="text-xs md:text-sm text-gray-900">{countdownSubLabel}</p>
             </div>
           </div>
 
@@ -162,6 +181,11 @@ const Overview = ({ overviewData }: OverviewProps) => {
                 <div className="text-xs md:text-sm text-gray-600">
                   {competition_progress.current_round.round_name}
                 </div>
+                {competition_progress.current_round.finish_time && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    Finishes at: {new Date(competition_progress.current_round.finish_time).toLocaleString()}
+                  </div>
+                )}
               </div>
 
               {/* Next Upcoming Round Card */}
@@ -177,25 +201,27 @@ const Overview = ({ overviewData }: OverviewProps) => {
                 <div className="text-xs md:text-sm text-gray-600">
                   {competition_progress.next_upcoming_round.round_name}
                 </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  Date: {competition_progress.next_upcoming_round.date
-                    ? new Date(competition_progress.next_upcoming_round.date).toLocaleDateString()
-                    : 'None'}
-                </div>
+                {competition_progress.next_upcoming_round.date && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    Date: {new Date(competition_progress.next_upcoming_round.date).toLocaleDateString()}
+                    {competition_progress.next_upcoming_round.time &&
+                      ` at ${competition_progress.next_upcoming_round.time.substring(0, 5)}`}
+                  </div>
+                )}
               </div>
 
-              {/* Current Round Status Card */}
+              {/* Last Round Status Card */}
               <div className="bg-white rounded-lg p-3 md:p-4 border border-gray-200">
                 <div className="flex items-center gap-2 md:gap-3 mb-2">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-[#2d4817] rounded flex items-center justify-center flex-shrink-0">
                     <Calendar className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm md:text-lg font-bold text-gray-900">Current Round Status</div>
+                    <div className="text-sm md:text-lg font-bold text-gray-900">Last Round Status</div>
                   </div>
                 </div>
                 <div className="text-xs md:text-sm text-gray-600">
-                  {competition_progress.current_round.status || 'None'}
+                  {competition_progress.last_round_status || 'N/A'}
                 </div>
               </div>
             </div>
