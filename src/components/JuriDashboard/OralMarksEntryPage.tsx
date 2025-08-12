@@ -7,19 +7,19 @@ import { Textarea } from "@/components/ui/textarea"
 import { ChevronLeft, RefreshCw, Save } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import useSubmitMarks from "@/hooks/useJuryMarks"
-import useGetJuryMarks from "@/hooks/useGetJuryMarks"
+import useSubmitOralMarks from "@/hooks/useSubmitOralMarks"
+import useGetOralMarks from "@/hooks/useGetOralMarks"
 import MemorialUploadSkeleton from "@/components/skeleton/TeamDashboard/MemorialUploadSkeleton"
 
 // Marking criteria
 const markingCriteria = [
-  { id: "knowledge_of_law_and_facts", name: "Knowledge of Law and Facts", max_points: 20 },
-  { id: "evidence_of_original_thought", name: "Evidence of Original Thought", max_points: 20 },
-  { id: "proper_and_articulate_analysis", name: "Proper and Articulate Analysis", max_points: 20 },
-  { id: "clarity_and_organization", name: "Clarity and Organization", max_points: 10 },
-  { id: "extent_and_use_of_research", name: "Extent and Use of Research", max_points: 10 },
-  { id: "correct_format_and_citation", name: "Correct Format and Citation", max_points: 10 },
-  { id: "grammar_and_style", name: "Grammar and Style", max_points: 10 },
+  { id: "knowledge_of_law", name: "Knowledge of Law", max_points: 25 },
+  { id: "application_of_law_to_facts", name: "Application of Law to Facts", max_points: 20 },
+  { id: "ingenuity_and_ability_to_answer_questions", name: "Ingenuity and Ability to answer Questions", max_points: 15 },
+  { id: "persuasiveness", name: "Persuasiveness", max_points: 10 },
+  { id: "time_management_and_organization", name: "Time Management and Organization", max_points: 10 },
+  { id: "style_poise_courtesy_and_demeanor", name: "Style, Poise, Courtesy and Demeanor", max_points: 10 },
+  { id: "language_and_presentation", name: "Language and Presentation", max_points: 10 },
 ]
 
 const initialScoresState = () => {
@@ -31,10 +31,11 @@ const initialScoresState = () => {
   return state
 }
 
-const MarksEntryPage = () => {
+const OralMarksEntryPage = () => {
   const [scores, setScores] = useState(initialScoresState())
   const [searchParams] = useSearchParams()
   const teamCode = searchParams.get("teamCode")
+  const roundId = searchParams.get("roundId")
   
   const getJuryId = () => {
     const juryDetails = localStorage.getItem("jury_details")
@@ -56,8 +57,8 @@ const MarksEntryPage = () => {
   const [juryId, setJuryId] = useState<number | null>(getJuryId())
   const [teamName, setTeamName] = useState("")
 
-  const { marks: existingMarks, isLoading: isLoadingMarks, error: fetchError } = useGetJuryMarks(teamCode, juryId)
-  const { isSubmitting, submitMessage, error: submitError, submitMarks } = useSubmitMarks()
+  const { oralMarks: existingMarks, isLoading: isLoadingMarks, error: fetchError } = useGetOralMarks(teamCode, roundId ? parseInt(roundId) : null, juryId)
+  const { isSubmitting, submitMessage, error: submitError, submitOralMarks } = useSubmitOralMarks()
 
   useEffect(() => {
     setTeamName(teamCode || "Selected Team")
@@ -83,8 +84,8 @@ const MarksEntryPage = () => {
   }
 
   const handleSubmit = async () => {
-    if (!teamCode || !juryId) {
-      alert("Team code or Jury ID is missing.")
+    if (!teamCode || !roundId || !juryId) {
+      alert("Team code, Round ID or Jury ID is missing.")
       return
     }
 
@@ -96,8 +97,8 @@ const MarksEntryPage = () => {
       }
     })
 
-    const marksData = { ...processedScores, team_id: teamCode, jury_id: juryId }
-    await submitMarks(marksData, existingMarks?.id || null)
+    const marksData = { ...processedScores, team_id: teamCode, round_id: parseInt(roundId), jury_id: juryId }
+    await submitOralMarks(marksData, existingMarks?.id || null)
   }
 
   const handleReset = () => {
@@ -105,7 +106,7 @@ const MarksEntryPage = () => {
   }
 
   const handleGoBack = () => {
-    window.location.href = "/juri-dashboard?view=team"
+    window.history.back(); // Go back to the previous page (Round.tsx)
   }
 
   if (isLoadingMarks) {
@@ -118,7 +119,7 @@ const MarksEntryPage = () => {
 
   const totalScore = calculateTotal(scores)
   const totalMaxScore = markingCriteria.reduce((sum, criterion) => sum + criterion.max_points, 0)
-    const scorePercentage = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0
+  const scorePercentage = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -132,13 +133,13 @@ const MarksEntryPage = () => {
             onClick={handleGoBack}
           >
             <ChevronLeft className="h-6 w-6" />
-            <span className="sr-only">Back to Dashboard</span>
+            <span className="sr-only">Back to Round Details</span>
           </Button>
           
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Marks Entry</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Oral Marks Entry</h1>
             <div className="inline-flex items-center bg-white/10 px-4 py-1.5 rounded-full">
-              <span className="text-sm font-medium">{teamName}</span>
+              <span className="text-sm font-medium">{teamName} (Round: {roundId})</span>
             </div>
           </div>
         </div>
@@ -239,7 +240,7 @@ const MarksEntryPage = () => {
                 <Button 
                   onClick={handleSubmit} 
                   disabled={isSubmitting}
-                  className="bg-[#2d4817] hover:bg-[#2d4817] gap-2"
+                  className="bg-[#2d4817] hover:bg-[#2d4817] gap-2" 
                 >
                   {isSubmitting ? (
                     <RefreshCw className="h-4 w-4 animate-spin" />
@@ -277,4 +278,4 @@ const MarksEntryPage = () => {
   )
 }
 
-export default MarksEntryPage
+export default OralMarksEntryPage

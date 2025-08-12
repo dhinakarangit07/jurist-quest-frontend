@@ -9,6 +9,7 @@ import JuriDashboard from "./pages/JuriDashboard";
 import Marks from "@/components/JuriDashboard/Marks"
 import Memorial from "@/components/JuriDashboard/Memorial"
 import Round from "@/components/JuriDashboard/Round"
+import OralMarksEntryPage from "@/components/JuriDashboard/OralMarksEntryPage"
 
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="marks" element={<Marks />} />
             <Route path="memorial" element={<Memorial />} />
             <Route path="round" element={<Round />} />
+            <Route path="oral-marks" element={<OralMarksEntryPage />} />
           </Route>
           
           

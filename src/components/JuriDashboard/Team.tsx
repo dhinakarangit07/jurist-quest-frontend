@@ -66,16 +66,6 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
            <Button
               onClick={(e) => {
                 e.stopPropagation()
-                // Navigate to marks page using window.location.href
-                window.location.href = `/juri-dashboard/marks?teamCode=${teamCode}`
-              }}
-              className="bg-green-900 hover:bg-green-800 text-white"
-            >
-              Marks
-            </Button>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation()
                 // Add functionality for Memorial button
                 window.location.href = `/juri-dashboard/memorial?teamCode=${teamCode}`
               }}
