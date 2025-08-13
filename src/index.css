@@ -103,3 +103,47 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@import 'react-calendar/dist/Calendar.css';
+
+@layer components {
+  .react-calendar {
+    @apply border-none font-sans w-full;
+  }
+
+  .react-calendar__navigation button {
+    @apply min-w-[44px] bg-none text-lg;
+  }
+
+  .react-calendar__navigation button:enabled:hover,
+  .react-calendar__navigation button:enabled:focus {
+    @apply bg-gray-200;
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    @apply text-xs uppercase font-bold;
+  }
+
+  .react-calendar__tile {
+    @apply max-w-full p-2 bg-none text-center leading-4;
+  }
+
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus {
+    @apply bg-gray-200;
+  }
+
+  .react-calendar__tile--now {
+    @apply bg-gray-200;
+  }
+
+  .react-calendar__tile--active {
+    @apply bg-[#4CAF50] text-white;
+  }
+
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+    @apply bg-[#4CAF50];
+  }
+}
+
