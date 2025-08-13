@@ -46,56 +46,7 @@ const Overview = () => {
   }, [])
 
   if (isLoading) {
-    return (
-      <div className="space-y-6 p-4 md:p-6">
-        <Card className="bg-[#2d4817] text-white border-0 shadow-lg animate-pulse">
-          <CardContent className="p-4 md:p-6">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-6">
-              <div className="flex-1">
-                <div className="h-8 md:h-9 bg-gray-300 rounded w-3/4 mb-3 md:mb-4"></div>
-                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                <div className="h-4 bg-gray-300 rounded w-5/6"></div>
-              </div>
-              <div className="bg-white border border-[#2d4817] rounded-lg p-3 md:p-4 w-full md:w-64 flex-shrink-0">
-                <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mb-2"></div>
-                <div className="bg-[#2d4817] rounded-md p-2 mb-2">
-                  <div className="flex justify-center gap-2">
-                    <div className="h-8 w-12 bg-gray-300 rounded"></div>
-                    <div className="h-8 w-12 bg-gray-300 rounded"></div>
-                    <div className="h-8 w-12 bg-gray-300 rounded"></div>
-                    <div className="h-8 w-12 bg-gray-300 rounded"></div>
-                  </div>
-                </div>
-                <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto"></div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="h-6 bg-gray-300 rounded w-1/3 mb-3"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                {[1, 2, 3].map((_, index) => (
-                  <div key={index} className="bg-white rounded-lg p-3 md:p-4 border border-gray-200">
-                    <div className="flex items-center gap-2 md:gap-3 mb-2">
-                      <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-300 rounded"></div>
-                      <div className="h-5 bg-gray-300 rounded w-1/2"></div>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="h-2 w-full bg-gray-300 rounded-full"></div>
-                      <div className="h-4 bg-gray-300 rounded w-16"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-lg border-0">
-          <CardContent className="p-4 md:p-6">
-            <div className="h-6 bg-gray-300 rounded w-1/3 mb-3"></div>
-            <div className="h-64 md:h-80 w-full bg-gray-300 rounded"></div>
-          </CardContent>
-        </Card>
-      </div>
-    )
+    return <div>Loading...</div>
   }
 
   if (error) {

@@ -164,7 +164,7 @@ const JudgeRound = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => navigate(`/juri-dashboard/oral-marks?teamCode=${teamCode}&roundId=${ongoingRound.id}`)}
+                      onClick={() => navigate(`/juri-dashboard/oral-marks?teamCode=${teamCode}&roundId=${ongoingRound.id}`, { state: { round: ongoingRound } })}
                       className="w-full bg-[#2d4817] hover:bg-[#233a12] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                     >Enter Marks</button>
                     <button
