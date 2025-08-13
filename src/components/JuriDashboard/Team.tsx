@@ -2,10 +2,12 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Info, Users } from "lucide-react"
+import { Info, Users, Swords } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import useJuryTeams from "@/hooks/useJuryTeams"
 import TeamCardSkeleton from "@/components/skeleton/TeamDashboard/TeamCardSkeleton"
+import { useEffect, useState } from "react"
+import axios from "axios"
 
 // Interface for TeamCard props
 interface TeamCardProps {
@@ -16,10 +18,15 @@ interface TeamCardProps {
   speaker1: string
   speaker2: string
   researcher: string
+  opponent?: {
+    team_id: string
+    team_representative_name: string
+    roundName: string
+  }
 }
 
 // TeamCard Component
-function TeamCard({ teamCode, teamName, university, representative, speaker1, speaker2, researcher }: TeamCardProps) {
+function TeamCard({ teamCode, teamName, university, representative, speaker1, speaker2, researcher, opponent }: TeamCardProps) {
   // Helper function to get initial for avatar
   const getInitial = (name: string) => name.charAt(0).toUpperCase()
 
@@ -62,6 +69,17 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
               ))}
             </div>
           </div>
+
+          {opponent && (
+            <div className="mt-4 pt-4 border-t border-dashed text-left">
+                <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    <Swords className="h-4 w-4" />
+                    <span>Opponent in {opponent.roundName}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-50">{opponent.team_representative_name} ({opponent.team_id})</p>
+            </div>
+          )}
+
           <div className="flex justify-center gap-2 mt-2">
            <Button
               onClick={(e) => {
@@ -93,8 +111,50 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
 // Main Team Component
 const Team = () => {
   const { juryTeams, isLoading, error } = useJuryTeams();
+  const [rounds, setRounds] = useState([]);
+  const [isLoadingRounds, setIsLoadingRounds] = useState(true);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (juryTeams && juryTeams.length > 0) {
+        setIsLoadingRounds(true);
+        const accessToken = localStorage.getItem("access_token");
+        const apiUrl = import.meta.env.VITE_API_URL;
+
+        Promise.all(juryTeams.map(team =>
+            axios.get(`${apiUrl}/api/jury-rounds/${team.team_id}/`, {
+                headers: { "Authorization": `Bearer ${accessToken}` }
+            })
+        )).then(responses => {
+            const allRoundsRaw = responses.flatMap(res => res.data);
+            const uniqueRounds = Array.from(new Map(allRoundsRaw.map(r => [r.id, r])).values());
+            setRounds(uniqueRounds);
+        }).catch(err => {
+            console.error("Failed to fetch rounds for all teams", err);
+        }).finally(() => {
+            setIsLoadingRounds(false);
+        });
+    } else if (!isLoading) {
+        setIsLoadingRounds(false);
+    }
+  }, [juryTeams, isLoading]);
+
+  const pairings = {};
+  for (const round of rounds) {
+      if (round.team1 && round.team2) {
+          pairings[round.team1.team_id] = { 
+              team_id: round.team2.team_id,
+              team_representative_name: round.team2.team_representative_name,
+              roundName: round.round_name 
+          };
+          pairings[round.team2.team_id] = {
+              team_id: round.team1.team_id,
+              team_representative_name: round.team1.team_representative_name,
+              roundName: round.round_name
+          };
+      }
+  }
+
+  if (isLoading || isLoadingRounds) {
     return (
       <main className="flex min-h-screen flex-col items-center p-4 md:p-8 lg:p-12 bg-gray-50 dark:bg-gray-900">
         <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-50">
@@ -158,6 +218,7 @@ const Team = () => {
             speaker1={team.speaker_1_name}
             speaker2={team.speaker_2_name}
             researcher={team.researcher_name}
+            opponent={pairings[team.team_id]}
           />
         ))}
       </section>
