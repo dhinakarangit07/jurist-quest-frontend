@@ -43,7 +43,7 @@ function TeamCard({ teamCode, teamName, university, representative, speaker1, sp
 
   return (
     <Card
-      className="shadow-sm hover:shadow-md transition-all duration-300 border-2 border-[#4CAF50] rounded-lg"
+      className="shadow-sm hover:shadow-md transition-all duration-300 border-2 border-[#2d4817] rounded-lg"
     >
       <CardContent className="p-6 flex flex-col items-center text-center">
         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-[#2d4817] mb-3">
@@ -207,7 +207,7 @@ const Team = () => {
       <main className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 md:p-8 lg:p-12">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#4CAF50] to-[#2d4817] rounded-full mb-6 shadow-lg">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#2d4817] to-[#2d4817] rounded-full mb-6 shadow-lg">
               <CalendarIcon className="h-10 w-10 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-200 mb-4">
@@ -223,7 +223,7 @@ const Team = () => {
             <div className="lg:col-span-2">
               <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
                 <CardContent className="p-0">
-                  <div className="bg-gradient-to-r from-[#4CAF50] to-[#2d4817] p-6 rounded-t-lg">
+                  <div className="bg-gradient-to-r from-[#2d4817] to-[#2d4817] p-6 rounded-t-lg">
                     <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                       <CalendarIcon className="h-6 w-6" />
                       Schedule Calendar
@@ -330,13 +330,13 @@ const Team = () => {
                       
                       .react-calendar__tile:hover {
                         background: linear-gradient(135deg, #f0fdf4 0%, #e6f3e6 100%) !important;
-                        border-color: #4CAF50 !important;
+                        border-color: #2d4817 !important;
                         transform: translateY(-2px) !important;
                         box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15) !important;
                       }
                       
                       .react-calendar__tile--active {
-                        background: linear-gradient(135deg, #4CAF50 0%, #2d4817 100%) !important;
+                        background: linear-gradient(135deg, #2d4817 0%, #2d4817 100%) !important;
                         border-color: #2d4817 !important;
                         color: white !important;
                         box-shadow: 0 4px 16px rgba(45, 72, 23, 0.3) !important;
@@ -375,7 +375,7 @@ const Team = () => {
                       
                       .dark .react-calendar__tile:hover {
                         background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%) !important;
-                        border-color: #4CAF50 !important;
+                        border-color: #2d4817 !important;
                       }
                       
                       .dark .react-calendar__navigation {
@@ -407,7 +407,7 @@ const Team = () => {
                           );
                           return dayEvents.length > 0 ? (
                             <div className="absolute top-1 right-1">
-                              <div className="bg-gradient-to-r from-[#4CAF50] to-[#2d4817] rounded-full w-3 h-3 flex items-center justify-center">
+                              <div className="bg-gradient-to-r from-[#2d4817] to-[#2d4817] rounded-full w-3 h-3 flex items-center justify-center">
                                 <div className="bg-white rounded-full w-1.5 h-1.5"></div>
                               </div>
                             </div>
@@ -438,7 +438,7 @@ const Team = () => {
             <div className="lg:col-span-1">
               <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-8">
                 <CardContent className="p-0">
-                  <div className="bg-gradient-to-r from-[#2d4817] to-[#4CAF50] p-6 rounded-t-lg">
+                  <div className="bg-gradient-to-r from-[#2d4817] to-[#2d4817] p-6 rounded-t-lg">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                       <Clock className="h-5 w-5" />
                       {selectedDate ? format(new Date(selectedDate.toString()), 'MMM dd, yyyy') : 'Select a Date'}
@@ -467,7 +467,7 @@ const Team = () => {
                                       {format(new Date(round.date), 'p')}
                                     </div>
                                   </div>
-                                  <div className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                  <div className="bg-[#2d4817] text-white px-3 py-1 rounded-full text-xs font-semibold">
                                     Round
                                   </div>
                                 </div>
