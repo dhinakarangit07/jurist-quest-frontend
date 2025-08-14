@@ -21,7 +21,6 @@ interface SidebarProps {
   toggleSidebar: () => void
 }
 
-
 const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
   const [isTeamsOpen, setTeamsOpen] = useState(false)
 
@@ -40,7 +39,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <TabsList className="grid grid-cols-1 h-auto bg-transparent space-y-2 p-0">
-
             {/* Regular Menu Items */}
           <TabsTrigger 
             value="announcement" 
@@ -58,8 +56,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
             <span>Dashboard</span>
           </TabsTrigger>
 
-        
-
           <TabsTrigger 
             value="team" 
             className="w-full bg-transparent hover:bg-gray-50 text-gray-700 rounded-lg h-12 flex items-center justify-start gap-3 px-4 data-[state=active]:[background-color:#2d4817] data-[state=active]:text-white border-none"
@@ -75,23 +71,22 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
             <User className="h-5 w-5" />
             <span>Profile</span>
           </TabsTrigger>
-
         </TabsList>
       </nav>
 
       {/* Logout Button */}
       <div className="p-4 border-t border-gray-100">
         <Button 
-  variant="ghost" 
-  className="w-full bg-[#2d4817] text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 hover:bg-[#2d4817] hover:text-white"
-  onClick={() => {
-    window.location.href = "/"
-  }}
->
-  <LogOut className="h-5 w-5" />
-  <span>Logout</span>
-</Button>
-
+          variant="ghost" 
+          className="w-full bg-[#2d4817] text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 hover:bg-[#2d4817] hover:text-white"
+          onClick={() => {
+            localStorage.clear()
+            window.location.href = "/"
+          }}
+        >
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
+        </Button>
       </div>
     </aside>
   )
