@@ -1,9 +1,10 @@
-// components/SpecialOffersDemo.tsx
 import { Shield, Users, Tag, CheckCircle } from "lucide-react";
 import useLegalHubAccess from "@/hooks/useLegalHubAccess";
+import useInternshipProgram from "@/hooks/useInternshipProgram";
 
 const SpecialOffersDemo = () => {
-  const { hasRequested, isLoading, error, requestAccess } = useLegalHubAccess();
+  const { hasRequested, isLoading: isLegalHubLoading, error: legalHubError, requestAccess } = useLegalHubAccess();
+  const { hasApplied, isLoading: isInternshipLoading, error: internshipError, applyForInternship } = useInternshipProgram();
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -70,11 +71,11 @@ const SpecialOffersDemo = () => {
                   style={{ backgroundColor: hasRequested ? "#6c757d" : "#2d4817" }}
                   className="px-8 py-4 text-white font-semibold rounded-xl hover:bg-[#2a4015] transition-all duration-200 transform hover:scale-105 shadow-md"
                   onClick={requestAccess}
-                  disabled={hasRequested || isLoading}
+                  disabled={hasRequested || isLegalHubLoading}
                 >
-                  {isLoading ? 'Please Wait...' : hasRequested ? 'Already Requested' : 'Request Access'}
+                  {isLegalHubLoading ? 'Please Wait...' : hasRequested ? 'Already Requested' : 'Request Access'}
                 </button>
-                {error && <p className="text-red-500">{error}</p>}
+                {legalHubError && <p className="text-red-500">{legalHubError}</p>}
               </div>
             </div>
           </div>
@@ -113,11 +114,14 @@ const SpecialOffersDemo = () => {
                  
                 </div>
                 <button
-                  style={{ backgroundColor: "#2d4817" }}
+                  style={{ backgroundColor: hasApplied ? "#6c757d" : "#2d4817" }}
                   className="px-8 py-4 text-white font-semibold rounded-xl hover:bg-[#2a4015] transition-all duration-200 transform hover:scale-105 shadow-md"
+                  onClick={applyForInternship}
+                  disabled={hasApplied || isInternshipLoading}
                 >
-                  Apply Now
+                  {isInternshipLoading ? 'Please Wait...' : hasApplied ? 'Already Applied' : 'Apply Now'}
                 </button>
+                {internshipError && <p className="text-red-500">{internshipError}</p>}
               </div>
             </div>
 

@@ -402,7 +402,7 @@ const Team = () => {
                       tileContent={({ date, view }) => {
                         if (view === 'month') {
                           const dayEvents = upcomingRounds.filter(round =>
-                            new Date(round.date).toDateString() === date.toDateString()
+                            new Date(`${round.date}T${round.time}`).toDateString() === date.toDateString()
                           );
                           return dayEvents.length > 0 ? (
                             <div className="absolute top-1 right-1">
@@ -417,7 +417,7 @@ const Team = () => {
                       tileClassName={({ date, view }) => {
                         if (view === 'month') {
                           const hasEvents = upcomingRounds.some(round =>
-                            new Date(round.date).toDateString() === date.toDateString()
+                            new Date(`${round.date}T${round.time}`).toDateString() === date.toDateString()
                           );
                           let classes = '';
                           if (hasEvents) {
@@ -449,11 +449,11 @@ const Team = () => {
                     {selectedDate && (
                       <>
                         {upcomingRounds.filter(round =>
-                          new Date(round.date).toDateString() === new Date(selectedDate.toString()).toDateString()
+                          new Date(`${round.date}T${round.time}`).toDateString() === new Date(selectedDate.toString()).toDateString()
                         ).length > 0 ? (
                           <div className="space-y-4">
                             {upcomingRounds.filter(round =>
-                              new Date(round.date).toDateString() === new Date(selectedDate.toString()).toDateString()
+                              new Date(`${round.date}T${round.time}`).toDateString() === new Date(selectedDate.toString()).toDateString()
                             ).map((round, index) => (
                               <div key={index} className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-700 dark:to-gray-600 p-4 rounded-xl border border-green-200 dark:border-gray-500 hover:shadow-md transition-all duration-200">
                                 <div className="flex items-start justify-between">
@@ -463,7 +463,7 @@ const Team = () => {
                                     </h4>
                                     <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                                       <Clock className="h-4 w-4" />
-                                      {format(new Date(round.date), 'p')}
+                                      {format(new Date(`${round.date}T${round.time}`), 'p')}
                                     </div>
                                   </div>
                                   <div className="bg-[#2d4817] text-white px-3 py-1 rounded-full text-xs font-semibold">
