@@ -30,6 +30,7 @@ import Round from "@/components/JuriDashboard/Round";
 import Sidebar from "@/components/JuriDashboard/sidebar";
 import Profile from "@/components/JuriDashboard/Profile";
 import DashboardSkeleton from "./DashboardSkeleton";
+import Logo from "@/assets/Logo.png"
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -86,7 +87,9 @@ const Dashboard = () => {
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>
             <Menu className="h-6 w-6" />
           </Button>
-          <h1 className="text-lg font-semibold">Moot Court Central</h1>
+          <div className="flex items-center gap-3  h-5">
+              <img src={Logo} className=" h-16 sm:w-21 sm:h-21 " alt="Logo" />
+            </div>
         </div>
 
         <div className="container mx-auto px-4 py-6">

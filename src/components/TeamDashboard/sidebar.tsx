@@ -111,6 +111,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }: SidebarProps) => {
   variant="ghost" 
   className="w-full bg-[#2d4817] text-white rounded-lg h-12 flex items-center justify-start gap-3 px-4 hover:bg-[#2d4817] hover:text-white"
   onClick={() => {
+    localStorage.clear()
     window.location.href = "/"
   }}
 >

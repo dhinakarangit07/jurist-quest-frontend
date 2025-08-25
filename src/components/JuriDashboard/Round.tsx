@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import useJuryRounds from "@/hooks/useJuryRounds";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card"
@@ -10,6 +10,7 @@ import RoundDetailsSkeleton from "@/components/skeleton/TeamDashboard/RoundDetai
 
 const JudgeRound = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const teamCode = searchParams.get('teamCode') || '';
   const { juryRounds, isLoading, error } = useJuryRounds(teamCode);
   const [selectedRound, setSelectedRound] = useState(null)
@@ -162,7 +163,10 @@ const JudgeRound = () => {
                         </div>
                       </div>
                     </div>
-
+                    <button
+                      onClick={() => navigate(`/juri-dashboard/oral-marks?teamCode=${teamCode}&roundId=${ongoingRound.id}`, { state: { round: ongoingRound } })}
+                      className="w-full bg-[#2d4817] hover:bg-[#233a12] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                    >Enter Marks</button>
                     <button
                       onClick={() => handleViewDetails(ongoingRound)}
                       className="w-full bg-[#2d4817] hover:bg-[#233a12] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"

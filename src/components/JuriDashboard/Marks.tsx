@@ -13,63 +13,19 @@ import MemorialUploadSkeleton from "@/components/skeleton/TeamDashboard/Memorial
 
 // Marking criteria
 const markingCriteria = [
-  {
-    id: "oral_presentation",
-    name: "Oral Presentation",
-    description: "Clarity, confidence, and persuasiveness of argument",
-    max_points: 30,
-    sub_criteria: [
-      { id: "clarity_of_argument", name: "Clarity of Argument", max_points: 10 },
-      { id: "confidence_and_poise", name: "Confidence and Poise", max_points: 10 },
-      { id: "persuasiveness", name: "Persuasiveness", max_points: 10 },
-    ],
-  },
-  {
-    id: "legal_knowledge",
-    name: "Legal Knowledge and Research",
-    description: "Understanding of relevant law and use of authorities",
-    max_points: 25,
-    sub_criteria: [
-      { id: "understanding_of_law", name: "Understanding of Law", max_points: 10 },
-      { id: "use_of_legal_authorities", name: "Use of Legal Authorities", max_points: 10 },
-      { id: "relevance_of_research", name: "Relevance of Research", max_points: 5 },
-    ],
-  },
-  {
-    id: "response",
-    name: "Response to Questions",
-    description: "Ability to answer judges' questions effectively",
-    max_points: 25,
-    sub_criteria: [
-      { id: "accuracy_of_answers", name: "Accuracy of Answers", max_points: 10 },
-      { id: "composure_under_pressure", name: "Composure Under Pressure", max_points: 10 },
-      { id: "relevance_to_question", name: "Relevance to Question", max_points: 5 },
-    ],
-  },
-  {
-    id: "structure",
-    name: "Structure and Logic",
-    description: "Logical flow and organization of arguments",
-    max_points: 10,
-    sub_criteria: [
-      { id: "logical_flow", name: "Logical Flow", max_points: 5 },
-      { id: "organization", name: "Organization", max_points: 5 },
-    ],
-  },
-  { id: "time_management", name: "Time Management", max_points: 5, sub_criteria: [] },
-  { id: "professionalism", name: "Professionalism", max_points: 5, sub_criteria: [] },
+  { id: "knowledge_of_law_and_facts", name: "Knowledge of Law and Facts", max_points: 20 },
+  { id: "evidence_of_original_thought", name: "Evidence of Original Thought", max_points: 20 },
+  { id: "proper_and_articulate_analysis", name: "Proper and Articulate Analysis", max_points: 20 },
+  { id: "clarity_and_organization", name: "Clarity and Organization", max_points: 10 },
+  { id: "extent_and_use_of_research", name: "Extent and Use of Research", max_points: 10 },
+  { id: "correct_format_and_citation", name: "Correct Format and Citation", max_points: 10 },
+  { id: "grammar_and_style", name: "Grammar and Style", max_points: 10 },
 ]
 
 const initialScoresState = () => {
   const state = {}
   markingCriteria.forEach((criterion) => {
-    if (criterion.sub_criteria.length > 0) {
-      criterion.sub_criteria.forEach((sub) => {
-        state[sub.id] = ""
-      })
-    } else {
-      state[criterion.id] = ""
-    }
+    state[criterion.id] = ""
   })
   state["overall_comments"] = ""
   return state
@@ -162,7 +118,7 @@ const MarksEntryPage = () => {
 
   const totalScore = calculateTotal(scores)
   const totalMaxScore = markingCriteria.reduce((sum, criterion) => sum + criterion.max_points, 0)
-  const scorePercentage = Math.round((totalScore / totalMaxScore) * 100)
+    const scorePercentage = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -192,54 +148,23 @@ const MarksEntryPage = () => {
           <CardContent className="p-6 space-y-6">
             {markingCriteria.map((criterion) => (
               <div key={criterion.id} className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                   <div className="space-y-1">
                     <h3 className="font-semibold text-gray-900 text-lg">{criterion.name}</h3>
-                    {criterion.description && (
-                      <p className="text-sm text-gray-500">{criterion.description}</p>
-                    )}
                   </div>
-                  
-                  {criterion.sub_criteria.length === 0 && (
-                    <div className="flex items-center gap-2 sm:w-40">
-                      <Input 
-                        type="number" 
-                        min="0" 
-                        max={criterion.max_points} 
-                        placeholder="0" 
-                        className="w-full text-right font-medium" 
-                        value={scores[criterion.id] || ""} 
-                        onChange={(e) => handleScoreChange(criterion.id, e.target.value)} 
-                      />
-                      <span className="text-sm text-gray-500 whitespace-nowrap">/ {criterion.max_points}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2 sm:w-40">
+                    <Input 
+                      type="number" 
+                      min="0" 
+                      max={criterion.max_points} 
+                      placeholder="0" 
+                      className="w-full text-right font-medium" 
+                      value={scores[criterion.id] || ""} 
+                      onChange={(e) => handleScoreChange(criterion.id, e.target.value)} 
+                    />
+                    <span className="text-sm text-gray-500 whitespace-nowrap">/ {criterion.max_points}</span>
+                  </div>
                 </div>
-                
-                {criterion.sub_criteria.length > 0 && (
-                  <div className="mt-4 pl-2 space-y-4">
-                    {criterion.sub_criteria.map((sub) => (
-                      <div key={sub.id} className="flex justify-between items-center">
-                        <Label htmlFor={sub.id} className="text-sm font-medium text-gray-700">
-                          {sub.name}
-                        </Label>
-                        <div className="flex items-center gap-2">
-                          <Input 
-                            id={sub.id} 
-                            type="number" 
-                            min="0" 
-                            max={sub.max_points} 
-                            placeholder="0" 
-                            className="w-20 text-right font-medium text-sm" 
-                            value={scores[sub.id] || ""} 
-                            onChange={(e) => handleScoreChange(sub.id, e.target.value)} 
-                          />
-                          <span className="text-xs text-gray-500 whitespace-nowrap">/ {sub.max_points}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             ))}
             

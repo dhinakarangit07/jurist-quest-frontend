@@ -303,11 +303,21 @@ const Memorial = () => {
       </div>
 
       <Card className="shadow-lg rounded-xl border border-gray-200">
-        <CardHeader className="pb-6 border-b border-gray-200">
-          <CardTitle className="text-3xl font-bold text-gray-900">Submitted Memorials</CardTitle>
-          <CardDescription className="text-lg text-gray-600">
-            Review and preview all memorial documents submitted by teams.
-          </CardDescription>
+        <CardHeader className="pb-6 border-b border-gray-200 flex flex-row justify-between items-center">
+          <div>
+            <CardTitle className="text-3xl font-bold text-gray-900">Submitted Memorials</CardTitle>
+            <CardDescription className="text-lg text-gray-600">
+              Review and preview all memorial documents submitted by teams.
+            </CardDescription>
+          </div>
+          <Button
+            onClick={() => {
+              window.location.href = `/juri-dashboard/marks?teamCode=${teamCode}`
+            }}
+            className="bg-green-900 hover:bg-green-800 text-white"
+          >
+            Marks
+          </Button>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="space-y-4">
